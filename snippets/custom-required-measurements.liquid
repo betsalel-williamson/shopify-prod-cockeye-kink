@@ -5,12 +5,176 @@
   This inverted structure makes it easy to see all measurements for a category at once
 {% endcomment %}
 
+{%- comment -%} Measurement Configuration for JavaScript {%- endcomment -%}
+{%- comment -%} Edit the JSON below to configure measurements and categories {%- endcomment -%}
+<script type="application/json" id="measurement-config-raw">
+  {
+    "default_step_in": 0.5,
+    "default_step_cm": 0.5,
+    "measurements": {
+      "Neck": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Chest": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Shoulders": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Torso": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Stomach": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Waist": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Butt": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Butt Rise": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Upper Thigh": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Lower Thigh": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Knee": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Calf": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Ankle": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Inseam": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Crotch": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Bicep": {
+        "min_in": 0.5,
+        "max_in": 300
+      },
+      "Hips": {
+        "min_in": 0.5,
+        "max_in": 300
+      }
+    },
+    "categories": {
+      "Deluxe Harness": {
+        "Neck": true,
+        "Chest": true,
+        "Shoulders": true,
+        "Torso": true,
+        "Waist": true
+      },
+      "Standard Harness": {
+        "Neck": true,
+        "Chest": true,
+        "Shoulders": true,
+        "Torso": true,
+        "Waist": true
+      },
+      "Suspender Harness": {
+        "Neck": true,
+        "Chest": true,
+        "Shoulders": true,
+        "Torso": true,
+        "Waist": true
+      },
+      "Dogtag/Pigtag": {
+        "Neck": false
+      },
+      "Chaps": {
+        "Waist": true,
+        "Upper Thigh": true,
+        "Lower Thigh": true,
+        "Knee": true,
+        "Calf": true,
+        "Ankle": true,
+        "Hips": false
+      },
+      "Shirt": {
+        "Chest": true,
+        "Shoulders": true,
+        "Torso": true,
+        "Stomach": true,
+        "Bicep": true
+      },
+      "Pants": {
+        "Waist": true,
+        "Butt": true,
+        "Butt Rise": true,
+        "Upper Thigh": true,
+        "Lower Thigh": true,
+        "Knee": true,
+        "Calf": true,
+        "Ankle": true,
+        "Inseam": true,
+        "Crotch": true,
+        "Hips": false
+      },
+      "Suspenders": {
+        "Chest": true,
+        "Shoulders": true,
+        "Waist": true
+      },
+      "Other": {
+        "Neck": false,
+        "Chest": false,
+        "Shoulders": false,
+        "Torso": false,
+        "Stomach": false,
+        "Waist": false,
+        "Butt": false,
+        "Butt Rise": false,
+        "Upper Thigh": false,
+        "Lower Thigh": false,
+        "Knee": false,
+        "Calf": false,
+        "Ankle": false,
+        "Inseam": false,
+        "Crotch": false,
+        "Bicep": false,
+        "Hips": false
+      }
+    }
+  }
+</script>
+<script type="application/json" id="measurement-config">
+  {
+    "harness_details": {{ harness_categories | json }},
+    "notes_section": {{ notes_categories | json }}
+  }
+</script>
+
 {%- liquid
   comment
     SINGLE SOURCE OF TRUTH - Categories list
     These category names are used as keys in the categories section of the JSON config
   endcomment
-  assign categories_list = "Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: ","
+  assign categories_list = 'Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other' | split: ','
 
   comment
     Measurement Configuration - JSON Dictionary Format (Inverted Structure)
@@ -28,20 +192,20 @@
     Measurement names list for Liquid iteration (for HTML generation)
     Must match the keys in measurements_json
   endcomment
-  assign measurement_names = "Neck,Chest,Shoulders,Torso,Stomach,Waist,Butt,Butt Rise,Upper Thigh,Lower Thigh,Knee,Calf,Ankle,Inseam,Crotch,Bicep,Hips" | split: ","
+  assign measurement_names = 'Neck,Chest,Shoulders,Torso,Stomach,Waist,Butt,Butt Rise,Upper Thigh,Lower Thigh,Knee,Calf,Ankle,Inseam,Crotch,Bicep,Hips' | split: ','
 
-  assign harness_categories = "Deluxe Harness,Standard Harness,Suspender Harness" | split: ","
-  assign notes_categories = "Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: ","
+  assign harness_categories = 'Deluxe Harness,Standard Harness,Suspender Harness' | split: ','
+  assign notes_categories = 'Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other' | split: ','
 
-  assign leather_colors = "Black,White,Red,Blue,Green,Yellow,Orange,Purple" | split: ","
-  assign left_front_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man" | split: ","
-  assign right_front_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man" | split: ","
-  assign back_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Wesco Boot,Watersports,Happy Puppy" | split: ","
-  assign long_sliders = "None,Brass,Steel" | split: ","
+  assign leather_colors = 'Black,White,Red,Blue,Green,Yellow,Orange,Purple' | split: ','
+  assign left_front_plates = 'Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man' | split: ','
+  assign right_front_plates = 'Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man' | split: ','
+  assign back_plates = 'Bear Paw,Puppy Paw,Fist Image,Pig Image,Wesco Boot,Watersports,Happy Puppy' | split: ','
+  assign long_sliders = 'None,Brass,Steel' | split: ','
 
-  assign order_tag_name = "_custom"
-  assign order_tag_value = "custom"
-  assign banner_text = "Order has not been submitted yet"
+  assign order_tag_name = '_custom'
+  assign order_tag_value = 'custom'
+  assign banner_text = 'Order has not been submitted yet'
 
   comment
     Show banner as long as order is in cart and not submitted:
@@ -233,22 +397,35 @@
 {%- comment -%} Category Selection Buttons {%- endcomment -%}
 <div class="options-group" id="optionButtons">
   {%- for category in categories_list -%}
-    <button type="button"
-            class="option-button"
-            data-index="{{ forloop.index0 }}"
-            data-label="{{ category }}">
+    <button
+      type="button"
+      class="option-button"
+      data-index="{{ forloop.index0 }}"
+      data-label="{{ category }}"
+    >
       {{ category }}
     </button>
   {%- endfor -%}
 </div>
 
 {%- comment -%} Unit of Measure - First property to indicate measurement unit used {%- endcomment -%}
-<input type="hidden" id="unitOfMeasure" name="properties[Unit of Measure]" value="Measured in Inches" form="product-form-{{ section.id }}" />
+<input
+  type="hidden"
+  id="unitOfMeasure"
+  name="properties[Unit of Measure]"
+  value="Measured in Inches"
+  form="product-form-{{ section.id }}"
+>
 
-<input type="hidden" id="selectedOption" name="properties[Selected Option]" form="product-form-{{ section.id }}" />
+<input type="hidden" id="selectedOption" name="properties[Selected Option]" form="product-form-{{ section.id }}">
 
 {%- comment -%} Custom Order Tagging {%- endcomment -%}
-<input type="hidden" name="properties[{{ order_tag_name }}]" value="{{ order_tag_value }}" form="product-form-{{ section.id }}" />
+<input
+  type="hidden"
+  name="properties[{{ order_tag_name }}]"
+  value="{{ order_tag_value }}"
+  form="product-form-{{ section.id }}"
+>
 
 {%- comment -%} Unit Toggle {%- endcomment -%}
 <div class="unit-toggle-container">
@@ -258,170 +435,6 @@
     <button type="button" class="unit-toggle-button" data-unit="cm">Centimeters</button>
   </div>
 </div>
-
-{%- comment -%} Measurement Configuration for JavaScript {%- endcomment -%}
-{%- comment -%} Edit the JSON below to configure measurements and categories {%- endcomment -%}
-<script type="application/json" id="measurement-config-raw">
-{
-  "default_step_in": 0.5,
-  "default_step_cm": 0.5,
-  "measurements": {
-    "Neck": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Chest": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Shoulders": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Torso": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Stomach": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Waist": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Butt": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Butt Rise": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Upper Thigh": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Lower Thigh": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Knee": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Calf": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Ankle": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Inseam": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Crotch": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Bicep": {
-      "min_in": 0.5,
-      "max_in": 300
-    },
-    "Hips": {
-      "min_in": 0.5,
-      "max_in": 300
-    }
-  },
-  "categories": {
-    "Deluxe Harness": {
-      "Neck": true,
-      "Chest": true,
-      "Shoulders": true,
-      "Torso": true,
-      "Waist": true
-    },
-    "Standard Harness": {
-      "Neck": true,
-      "Chest": true,
-      "Shoulders": true,
-      "Torso": true,
-      "Waist": true
-    },
-    "Suspender Harness": {
-      "Neck": true,
-      "Chest": true,
-      "Shoulders": true,
-      "Torso": true,
-      "Waist": true
-    },
-    "Dogtag/Pigtag": {
-      "Neck": false
-    },
-    "Chaps": {
-      "Waist": true,
-      "Upper Thigh": true,
-      "Lower Thigh": true,
-      "Knee": true,
-      "Calf": true,
-      "Ankle": true,
-      "Hips": false
-    },
-    "Shirt": {
-      "Chest": true,
-      "Shoulders": true,
-      "Torso": true,
-      "Stomach": true,
-      "Bicep": true
-    },
-    "Pants": {
-      "Waist": true,
-      "Butt": true,
-      "Butt Rise": true,
-      "Upper Thigh": true,
-      "Lower Thigh": true,
-      "Knee": true,
-      "Calf": true,
-      "Ankle": true,
-      "Inseam": true,
-      "Crotch": true,
-      "Hips": false
-    },
-    "Suspenders": {
-      "Chest": true,
-      "Shoulders": true,
-      "Waist": true
-    },
-    "Other": {
-      "Neck": false,
-      "Chest": false,
-      "Shoulders": false,
-      "Torso": false,
-      "Stomach": false,
-      "Waist": false,
-      "Butt": false,
-      "Butt Rise": false,
-      "Upper Thigh": false,
-      "Lower Thigh": false,
-      "Knee": false,
-      "Calf": false,
-      "Ankle": false,
-      "Inseam": false,
-      "Crotch": false,
-      "Bicep": false,
-      "Hips": false
-    }
-  }
-}
-</script>
-<script type="application/json" id="measurement-config">
-{
-  "harness_details": {{ harness_categories | json }},
-  "notes_section": {{ notes_categories | json }}
-}
-</script>
 
 {%- comment -%} Measurement Fields {%- endcomment -%}
 <div class="measurements-group" id="measurementsGroup">
@@ -433,66 +446,70 @@
     {%- assign step_in = 0.5 -%}
     {%- assign step_cm = 0.5 -%}
 
-      {%- comment -%} Calculate CM min/max from inches, rounded to nearest whole cm {%- endcomment -%}
-      {%- assign min_cm_raw = min_in | times: 2.54 -%}
-      {%- assign min_cm = min_cm_raw | floor -%}
-      {%- assign max_cm_raw = max_in | times: 2.54 -%}
-      {%- assign max_cm = max_cm_raw | floor -%}
+    {%- comment -%} Calculate CM min/max from inches, rounded to nearest whole cm {%- endcomment -%}
+    {%- assign min_cm_raw = min_in | times: 2.54 -%}
+    {%- assign min_cm = min_cm_raw | floor -%}
+    {%- assign max_cm_raw = max_in | times: 2.54 -%}
+    {%- assign max_cm = max_cm_raw | floor -%}
 
-      <div class="measurement-field"
-           id="measurement-{{ handle }}"
-           data-measurement="{{ meas_name }}"
-           data-min-in="{{ min_in }}"
-           data-max-in="{{ max_in }}"
-           data-step-in="{{ step_in }}"
-           data-step-cm="{{ step_cm }}"
-           data-min-cm="{{ min_cm }}"
-           data-max-cm="{{ max_cm }}">
-        <label for="{{ handle }}-in">{{ meas_name }}</label>
-        <select
-          id="{{ handle }}-in"
-          name="properties[{{ meas_name }} (in)]"
-          form="product-form-{{ section.id }}"
-          class="measurement-select measurement-in"
-          data-measurement="{{ meas_name }}">
-          <option value="" disabled selected>—</option>
-          {%- assign steps = max_in | divided_by: step_in | floor -%}
-          {%- for i in (0..steps) -%}
-            {%- assign val = i | times: step_in | plus: min_in -%}
-            {%- if val <= max_in -%}
-              {%- if step_in == 0.5 -%}
-                {%- assign display_val = val | round: 1 -%}
-              {%- else -%}
-                {%- assign display_val = val | round: 2 -%}
-              {%- endif -%}
-              <option value="{{ val }}">{{ display_val }}</option>
+    <div
+      class="measurement-field"
+      id="measurement-{{ handle }}"
+      data-measurement="{{ meas_name }}"
+      data-min-in="{{ min_in }}"
+      data-max-in="{{ max_in }}"
+      data-step-in="{{ step_in }}"
+      data-step-cm="{{ step_cm }}"
+      data-min-cm="{{ min_cm }}"
+      data-max-cm="{{ max_cm }}"
+    >
+      <label for="{{ handle }}-in">{{ meas_name }}</label>
+      <select
+        id="{{ handle }}-in"
+        name="properties[{{ meas_name }} (in)]"
+        form="product-form-{{ section.id }}"
+        class="measurement-select measurement-in"
+        data-measurement="{{ meas_name }}"
+      >
+        <option value="" disabled selected>—</option>
+        {%- assign steps = max_in | divided_by: step_in | floor -%}
+        {%- for i in (0..steps) -%}
+          {%- assign val = i | times: step_in | plus: min_in -%}
+          {%- if val <= max_in -%}
+            {%- if step_in == 0.5 -%}
+              {%- assign display_val = val | round: 1 -%}
+            {%- else -%}
+              {%- assign display_val = val | round: 2 -%}
             {%- endif -%}
-          {%- endfor -%}
-        </select>
-        <select
-          id="{{ handle }}-cm"
-          name="properties[{{ meas_name }} (cm)]"
-          form="product-form-{{ section.id }}"
-          class="measurement-select measurement-cm"
-          data-measurement="{{ meas_name }}"
-          style="display: none;">
-          <option value="" disabled selected>—</option>
-          {%- assign steps_cm = max_cm | divided_by: step_cm | floor -%}
-          {%- for i in (0..steps_cm) -%}
-            {%- assign val_cm = i | times: step_cm | plus: min_cm -%}
-            {%- if val_cm <= max_cm -%}
-              {%- if step_cm == 0.5 -%}
-                {%- assign display_val_cm = val_cm | round: 1 -%}
-              {%- elsif step_cm >= 1 -%}
-                {%- assign display_val_cm = val_cm | round: 0 -%}
-              {%- else -%}
-                {%- assign display_val_cm = val_cm | round: 2 -%}
-              {%- endif -%}
-              <option value="{{ val_cm }}">{{ display_val_cm }}</option>
+            <option value="{{ val }}">{{ display_val }}</option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+      <select
+        id="{{ handle }}-cm"
+        name="properties[{{ meas_name }} (cm)]"
+        form="product-form-{{ section.id }}"
+        class="measurement-select measurement-cm"
+        data-measurement="{{ meas_name }}"
+        style="display: none;"
+      >
+        <option value="" disabled selected>—</option>
+        {%- assign steps_cm = max_cm | divided_by: step_cm | floor -%}
+        {%- for i in (0..steps_cm) -%}
+          {%- assign val_cm = i | times: step_cm | plus: min_cm -%}
+          {%- if val_cm <= max_cm -%}
+            {%- if step_cm == 0.5 -%}
+              {%- assign display_val_cm = val_cm | round: 1 -%}
+            {%- elsif step_cm >= 1 -%}
+              {%- assign display_val_cm = val_cm | round: 0 -%}
+            {%- else -%}
+              {%- assign display_val_cm = val_cm | round: 2 -%}
             {%- endif -%}
-          {%- endfor -%}
-        </select>
-      </div>
+            <option value="{{ val_cm }}">{{ display_val_cm }}</option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+    </div>
   {%- endfor -%}
 </div>
 
@@ -505,7 +522,13 @@
       <option>{{ color }}</option>
     {%- endfor -%}
   </select>
-  <input type="text" name="properties[Leather Color - Text]" class="custom-text" placeholder="Enter custom color" form="product-form-{{ section.id }}">
+  <input
+    type="text"
+    name="properties[Leather Color - Text]"
+    class="custom-text"
+    placeholder="Enter custom color"
+    form="product-form-{{ section.id }}"
+  >
 
   <label>Left Front Plate</label>
   <select name="properties[Left Front Plate]" form="product-form-{{ section.id }}">
@@ -514,7 +537,13 @@
       <option>{{ plate }}</option>
     {%- endfor -%}
   </select>
-  <input type="text" name="properties[Left Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+  <input
+    type="text"
+    name="properties[Left Front Plate - Text]"
+    class="custom-text"
+    placeholder="Enter custom plate"
+    form="product-form-{{ section.id }}"
+  >
 
   <label>Right Front Plate</label>
   <select name="properties[Right Front Plate]" form="product-form-{{ section.id }}">
@@ -523,7 +552,13 @@
       <option>{{ plate }}</option>
     {%- endfor -%}
   </select>
-  <input type="text" name="properties[Right Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+  <input
+    type="text"
+    name="properties[Right Front Plate - Text]"
+    class="custom-text"
+    placeholder="Enter custom plate"
+    form="product-form-{{ section.id }}"
+  >
 
   <label>Back Plate</label>
   <select name="properties[Back Plate]" form="product-form-{{ section.id }}">
@@ -532,7 +567,13 @@
       <option>{{ plate }}</option>
     {%- endfor -%}
   </select>
-  <input type="text" name="properties[Back Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+  <input
+    type="text"
+    name="properties[Back Plate - Text]"
+    class="custom-text"
+    placeholder="Enter custom plate"
+    form="product-form-{{ section.id }}"
+  >
 
   <label>Long Sliders</label>
   <select name="properties[Long Sliders]" form="product-form-{{ section.id }}">
@@ -541,23 +582,39 @@
       <option>{{ slider }}</option>
     {%- endfor -%}
   </select>
-  <input type="text" name="properties[Long Sliders - Text]" class="custom-text" placeholder="Enter custom sliders" form="product-form-{{ section.id }}">
+  <input
+    type="text"
+    name="properties[Long Sliders - Text]"
+    class="custom-text"
+    placeholder="Enter custom sliders"
+    form="product-form-{{ section.id }}"
+  >
 
   <div>
-    <button type="button" class="custom-toggle-button" onclick="toggleCustomFields()">Don't see a color listed? Click here</button>
+    <button type="button" class="custom-toggle-button" onclick="toggleCustomFields()">
+      Don't see a color listed? Click here
+    </button>
   </div>
 </div>
 
 {%- comment -%} Notes Section {%- endcomment -%}
 <div class="conditional-section" id="notes-section">
   <label>Notes</label>
-  <textarea name="properties[Notes]" placeholder="Enter your notes here" form="product-form-{{ section.id }}"></textarea>
+  <textarea
+    name="properties[Notes]"
+    placeholder="Enter your notes here"
+    form="product-form-{{ section.id }}"
+  ></textarea>
   <label>Event (Optional)</label>
-  <textarea name="properties[Event (Optional)]" placeholder="Event name or details" form="product-form-{{ section.id }}"></textarea>
+  <textarea
+    name="properties[Event (Optional)]"
+    placeholder="Event name or details"
+    form="product-form-{{ section.id }}"
+  ></textarea>
 </div>
 
 <script>
-  (function() {
+  (function () {
     'use strict';
 
     // Load configuration from JSON script tags
@@ -583,7 +640,7 @@
           // Measurement exists in category - value determines if required
           categoryInfo[categoryName] = {
             included: true,
-            required: categoryMeasurements[measName] === true
+            required: categoryMeasurements[measName] === true,
           };
         }
       }
@@ -601,7 +658,7 @@
         max_cm: maxCm,
         step_in: measConfig.step_in !== undefined ? measConfig.step_in : defaultStepIn,
         step_cm: measConfig.step_cm !== undefined ? measConfig.step_cm : defaultStepCm,
-        categories: categoryInfo
+        categories: categoryInfo,
       };
     }
 
@@ -609,8 +666,8 @@
       measurements: measurements,
       categories: {
         harness_details: configRaw.harness_details || [],
-        notes_section: configRaw.notes_section || []
-      }
+        notes_section: configRaw.notes_section || [],
+      },
     };
     const INCH_TO_CM = 2.54;
     const CM_TO_INCH = 1 / 2.54;
@@ -650,7 +707,7 @@
       }
 
       // Reset category selection
-      optionButtons.forEach(btn => btn.classList.remove('selected'));
+      optionButtons.forEach((btn) => btn.classList.remove('selected'));
       if (selectedInput) selectedInput.value = '';
       selectedCategory = null;
 
@@ -659,7 +716,7 @@
       if (notesSection) notesSection.classList.remove('active');
 
       // Hide all measurements
-      document.querySelectorAll('.measurement-field').forEach(field => {
+      document.querySelectorAll('.measurement-field').forEach((field) => {
         field.classList.remove('active');
         const inSelect = field.querySelector('.measurement-in');
         const cmSelect = field.querySelector('.measurement-cm');
@@ -674,13 +731,13 @@
       });
 
       // Hide custom text fields
-      document.querySelectorAll('.custom-text').forEach(el => {
+      document.querySelectorAll('.custom-text').forEach((el) => {
         el.style.display = 'none';
       });
 
       // Reset unit toggle
       currentUnit = 'in';
-      unitToggleButtons.forEach(btn => {
+      unitToggleButtons.forEach((btn) => {
         btn.classList.toggle('active', btn.dataset.unit === 'in');
       });
 
@@ -701,7 +758,10 @@
           harnessSection.classList.toggle('active', config.categories.harness_details.includes(selectedCategory));
         }
         if (notesSection && config.categories && config.categories.notes_section) {
-          notesSection.classList.toggle('active', (config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'));
+          notesSection.classList.toggle(
+            'active',
+            config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'
+          );
         }
 
         // Update measurements for first category
@@ -719,7 +779,7 @@
 
     // Update measurement visibility based on unit
     function updateMeasurementVisibility() {
-      document.querySelectorAll('.measurement-field').forEach(field => {
+      document.querySelectorAll('.measurement-field').forEach((field) => {
         const inSelect = field.querySelector('.measurement-in');
         const cmSelect = field.querySelector('.measurement-cm');
         if (inSelect && cmSelect) {
@@ -752,7 +812,7 @@
 
     // Update measurement when unit changes
     function updateMeasurementOnUnitChange() {
-      document.querySelectorAll('.measurement-field.active').forEach(field => {
+      document.querySelectorAll('.measurement-field.active').forEach((field) => {
         const measName = field.dataset.measurement;
         const inSelect = field.querySelector('.measurement-in');
         const cmSelect = field.querySelector('.measurement-cm');
@@ -774,7 +834,7 @@
               let bestMatch = null;
               let bestDiff = Infinity;
 
-              options.forEach(opt => {
+              options.forEach((opt) => {
                 if (opt.value && opt.value !== '' && opt.value !== '—') {
                   const optValue = parseFloat(opt.value);
                   const diff = Math.abs(optValue - closestIn);
@@ -808,7 +868,7 @@
               let bestMatch = null;
               let bestDiff = Infinity;
 
-              options.forEach(opt => {
+              options.forEach((opt) => {
                 if (opt.value && opt.value !== '' && opt.value !== '—') {
                   const optValue = parseFloat(opt.value);
                   const diff = Math.abs(optValue - clampedCm);
@@ -837,7 +897,7 @@
     function updateMeasurementsForCategory(category) {
       if (!category || !config.measurements) return;
 
-      document.querySelectorAll('.measurement-field').forEach(field => {
+      document.querySelectorAll('.measurement-field').forEach((field) => {
         const measName = field.dataset.measurement;
         const measConfig = config.measurements[measName];
 
@@ -884,7 +944,7 @@
       const requiredMeasurements = [];
       const activeFields = document.querySelectorAll('.measurement-field.active');
 
-      activeFields.forEach(field => {
+      activeFields.forEach((field) => {
         const measName = field.dataset.measurement;
         if (!measName) return;
 
@@ -910,19 +970,15 @@
         if (inSelect) {
           // Check if selected option is not the placeholder (first option with empty value)
           const selectedOption = inSelect.options[inSelect.selectedIndex];
-          inHasValue = selectedOption &&
-                       selectedOption.value !== '' &&
-                       selectedOption.value !== null &&
-                       !selectedOption.disabled;
+          inHasValue =
+            selectedOption && selectedOption.value !== '' && selectedOption.value !== null && !selectedOption.disabled;
         }
 
         if (cmSelect) {
           // Check if selected option is not the placeholder (first option with empty value)
           const selectedOption = cmSelect.options[cmSelect.selectedIndex];
-          cmHasValue = selectedOption &&
-                       selectedOption.value !== '' &&
-                       selectedOption.value !== null &&
-                       !selectedOption.disabled;
+          cmHasValue =
+            selectedOption && selectedOption.value !== '' && selectedOption.value !== null && !selectedOption.disabled;
         }
 
         // If neither has a value, it's missing
@@ -938,19 +994,20 @@
           'properties[Left Front Plate]',
           'properties[Right Front Plate]',
           'properties[Back Plate]',
-          'properties[Long Sliders]'
+          'properties[Long Sliders]',
         ];
 
-        harnessFields.forEach(fieldName => {
+        harnessFields.forEach((fieldName) => {
           const select = document.querySelector(`select[name="${fieldName}"]`);
           if (!select) return;
 
           // Check if selected option is not the placeholder
           const selectedOption = select.options[select.selectedIndex];
-          const hasValue = selectedOption &&
-                           selectedOption.value !== '' &&
-                           selectedOption.value !== null &&
-                           selectedOption.value !== 'Select one';
+          const hasValue =
+            selectedOption &&
+            selectedOption.value !== '' &&
+            selectedOption.value !== null &&
+            selectedOption.value !== 'Select one';
 
           // Check if custom text field is filled as alternative
           const customTextName = fieldName.replace(']', ' - Text]');
@@ -1010,11 +1067,9 @@
       const targetUnit = sourceUnit === 'in' ? 'cm' : 'in';
       const convertedValue = convertValue(parseFloat(value), sourceUnit, targetUnit);
 
-      document.querySelectorAll('.measurement-field').forEach(field => {
+      document.querySelectorAll('.measurement-field').forEach((field) => {
         if (field.dataset.measurement === measName) {
-          const step = sourceUnit === 'in'
-            ? parseFloat(field.dataset.stepCm)
-            : parseFloat(field.dataset.stepIn);
+          const step = sourceUnit === 'in' ? parseFloat(field.dataset.stepCm) : parseFloat(field.dataset.stepIn);
           const minCm = parseFloat(field.dataset.minCm);
           const maxCm = parseFloat(field.dataset.maxCm);
           const closestValue = getClosestStepValue(convertedValue, step);
@@ -1032,7 +1087,7 @@
             let bestMatch = null;
             let bestDiff = Infinity;
 
-            options.forEach(opt => {
+            options.forEach((opt) => {
               if (opt.value && opt.value !== '') {
                 const optValue = parseFloat(opt.value);
                 const diff = Math.abs(optValue - finalValue);
@@ -1053,7 +1108,7 @@
 
             measurementValues.set(measName, {
               in: sourceUnit === 'in' ? parseFloat(value) : parseFloat(targetSelect.value) / INCH_TO_CM,
-              cm: sourceUnit === 'cm' ? parseFloat(value) : parseFloat(targetSelect.value)
+              cm: sourceUnit === 'cm' ? parseFloat(value) : parseFloat(targetSelect.value),
             });
           }
         }
@@ -1061,9 +1116,9 @@
     }
 
     // Category selection handlers
-    optionButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        optionButtons.forEach(btn => btn.classList.remove('selected'));
+    optionButtons.forEach((button) => {
+      button.addEventListener('click', function () {
+        optionButtons.forEach((btn) => btn.classList.remove('selected'));
         this.classList.add('selected');
         selectedCategory = this.dataset.label;
         if (selectedInput) selectedInput.value = selectedCategory;
@@ -1073,11 +1128,14 @@
           harnessSection.classList.toggle('active', config.categories.harness_details.includes(selectedCategory));
         }
         if (notesSection && config.categories && config.categories.notes_section) {
-          notesSection.classList.toggle('active', (config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'));
+          notesSection.classList.toggle(
+            'active',
+            config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'
+          );
         }
 
         // Hide custom fields when switching
-        document.querySelectorAll('.custom-text').forEach(el => {
+        document.querySelectorAll('.custom-text').forEach((el) => {
           el.style.display = 'none';
         });
 
@@ -1088,10 +1146,10 @@
     });
 
     // Unit toggle handlers
-    unitToggleButtons.forEach(button => {
-      button.addEventListener('click', function() {
+    unitToggleButtons.forEach((button) => {
+      button.addEventListener('click', function () {
         currentUnit = this.dataset.unit;
-        unitToggleButtons.forEach(btn => {
+        unitToggleButtons.forEach((btn) => {
           btn.classList.toggle('active', btn.dataset.unit === currentUnit);
         });
 
@@ -1109,8 +1167,8 @@
     });
 
     // Measurement change handlers
-    document.querySelectorAll('.measurement-select').forEach(select => {
-      select.addEventListener('change', function() {
+    document.querySelectorAll('.measurement-select').forEach((select) => {
+      select.addEventListener('change', function () {
         const field = this.closest('.measurement-field');
         if (!field) return;
 
@@ -1127,23 +1185,23 @@
 
     // Harness customization field change handlers
     const harnessSelects = document.querySelectorAll('#harness-details select');
-    harnessSelects.forEach(select => {
-      select.addEventListener('change', function() {
+    harnessSelects.forEach((select) => {
+      select.addEventListener('change', function () {
         updateAddToCartButton();
       });
     });
 
     // Harness customization custom text field change handlers
     const harnessCustomTexts = document.querySelectorAll('#harness-details .custom-text');
-    harnessCustomTexts.forEach(input => {
-      input.addEventListener('input', function() {
+    harnessCustomTexts.forEach((input) => {
+      input.addEventListener('input', function () {
         updateAddToCartButton();
       });
     });
 
     // Form submission handler - filter properties
     if (productForm) {
-      productForm.addEventListener('submit', function(event) {
+      productForm.addEventListener('submit', function (event) {
         if (!validateRequiredFields()) {
           event.preventDefault();
           alert('Please select a category and fill all required measurements.');
@@ -1161,7 +1219,7 @@
         }
 
         // Ensure both (in) and (cm) values are set for all active measurements
-        document.querySelectorAll('.measurement-field.active').forEach(field => {
+        document.querySelectorAll('.measurement-field.active').forEach((field) => {
           const measName = field.dataset.measurement;
           const inSelect = field.querySelector('.measurement-in');
           const cmSelect = field.querySelector('.measurement-cm');
@@ -1178,7 +1236,7 @@
         if (selectedCategory && config.measurements) {
           const measurementInputs = this.querySelectorAll('select[name^="properties["]');
 
-          measurementInputs.forEach(input => {
+          measurementInputs.forEach((input) => {
             const name = input.getAttribute('name');
             if (name && (name.includes('(in)') || name.includes('(cm)'))) {
               // Extract measurement name
@@ -1188,14 +1246,12 @@
                 const measConfig = config.measurements[measName];
 
                 // Check if measurement is included in the selected category
-                const categoryInfo = measConfig && measConfig.categories ? measConfig.categories[selectedCategory] : null;
+                const categoryInfo =
+                  measConfig && measConfig.categories ? measConfig.categories[selectedCategory] : null;
                 const isIncluded = categoryInfo && categoryInfo.included === true;
 
                 // Remove if not in category or empty
-                const shouldRemove = !measConfig ||
-                                     !isIncluded ||
-                                     !input.value ||
-                                     input.value === '';
+                const shouldRemove = !measConfig || !isIncluded || !input.value || input.value === '';
 
                 if (shouldRemove) {
                   // Remove this input from form
@@ -1215,9 +1271,11 @@
       if (!banner) return;
 
       // Hide banner on checkout/thank you pages
-      if (window.location.pathname.includes('/checkouts/') ||
-          window.location.pathname.includes('/thank-you') ||
-          window.location.pathname.includes('/checkout')) {
+      if (
+        window.location.pathname.includes('/checkouts/') ||
+        window.location.pathname.includes('/thank-you') ||
+        window.location.pathname.includes('/checkout')
+      ) {
         banner.style.display = 'none';
         return;
       }
@@ -1232,8 +1290,8 @@
       if (window.location.pathname.includes('/cart')) {
         // Check cart state via cart drawer or cart API
         fetch('/cart.js')
-          .then(response => response.json())
-          .then(cart => {
+          .then((response) => response.json())
+          .then((cart) => {
             if (cart.item_count > 0) {
               banner.style.display = 'block';
             } else {
@@ -1257,7 +1315,7 @@
     }
 
     // Handle pageshow event for back/forward cache - clear all values
-    window.addEventListener('pageshow', function() {
+    window.addEventListener('pageshow', function () {
       // Clear all values when navigating back/forward
       initialize();
       updateAddToCartButton();
@@ -1266,7 +1324,7 @@
     });
 
     // Listen for cart updates to show/hide banner
-    document.addEventListener('cart:updated', function() {
+    document.addEventListener('cart:updated', function () {
       updateBannerVisibility();
     });
 
@@ -1280,7 +1338,7 @@
 
   // Toggle custom fields function (for harness details)
   function toggleCustomFields() {
-    document.querySelectorAll('.custom-text').forEach(el => {
+    document.querySelectorAll('.custom-text').forEach((el) => {
       el.style.display = 'block';
     });
   }
