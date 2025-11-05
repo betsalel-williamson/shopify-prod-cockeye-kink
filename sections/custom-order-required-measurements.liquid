@@ -43,3 +43,24 @@
     </div>
   {% endfor %}
 </div>
+
+{% schema %}
+{
+  "name": "t:sections.custom-order-required-measurements.name",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "liquid",
+      "id": "custom_order_required_measurements",
+      "label": "t:sections.custom-order-required-measurements.settings.custom_order_required_measurements.label",
+      "info": "t:sections.custom-order-required-measurements.settings.custom_order_required_measurements.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom-order-required-measurements.presets.name"
+    }
+  ]
+}
+{% endschema %}
