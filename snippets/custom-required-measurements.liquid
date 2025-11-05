@@ -1,4 +1,107 @@
+{% comment %}
+  Custom Required Measurements Snippet
+  Configuration: Edit the JSON object in the script tag below to customize measurements, categories, and options
+{% endcomment %}
+
+{%- liquid
+  comment
+    Configuration Variables - Easy to edit by store owner
+    Modify these arrays and values to customize the system
+  endcomment
+
+  assign categories_list = "Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: ","
+  assign harness_categories = "Deluxe Harness,Standard Harness,Suspender Harness" | split: ","
+  assign notes_categories = "Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: ","
+
+  assign leather_colors = "Black,White,Red,Blue,Green,Yellow,Orange,Purple" | split: ","
+  assign left_front_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man" | split: ","
+  assign right_front_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Boot Image,Biohazard Symbol,Cigar Man" | split: ","
+  assign back_plates = "Bear Paw,Puppy Paw,Fist Image,Pig Image,Wesco Boot,Watersports,Happy Puppy" | split: ","
+  assign long_sliders = "None,Brass,Steel" | split: ","
+
+  assign order_tag_name = "_custom"
+  assign order_tag_value = "custom"
+  assign banner_text = "Order has not been submitted yet"
+  assign banner_enabled = true
+
+  comment
+    Measurement definitions - each measurement has:
+    - name: measurement name
+    - min: minimum value (inches)
+    - max: maximum value (inches)
+    - step_in: step size for inches
+    - step_cm: step size for centimeters
+    - categories: comma-separated list of categories this applies to
+    - required: true/false
+  endcomment
+
+  assign measurement_neck_categories = "Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Other" | split: ","
+  assign measurement_chest_categories = "Deluxe Harness,Standard Harness,Suspender Harness,Shirt,Suspenders,Other" | split: ","
+  assign measurement_shoulders_categories = "Deluxe Harness,Standard Harness,Suspender Harness,Shirt,Suspenders,Other" | split: ","
+  assign measurement_torso_categories = "Deluxe Harness,Standard Harness,Suspender Harness,Shirt,Other" | split: ","
+  assign measurement_stomach_categories = "Shirt,Other" | split: ","
+  assign measurement_waist_categories = "Deluxe Harness,Standard Harness,Suspender Harness,Pants,Chaps,Suspenders,Other" | split: ","
+  assign measurement_butt_categories = "Pants,Other" | split: ","
+  assign measurement_butt_rise_categories = "Pants,Other" | split: ","
+  assign measurement_upper_thigh_categories = "Pants,Chaps,Other" | split: ","
+  assign measurement_lower_thigh_categories = "Pants,Chaps,Other" | split: ","
+  assign measurement_knee_categories = "Pants,Chaps,Other" | split: ","
+  assign measurement_calf_categories = "Pants,Chaps,Other" | split: ","
+  assign measurement_ankle_categories = "Pants,Chaps,Other" | split: ","
+  assign measurement_inseam_categories = "Pants,Other" | split: ","
+  assign measurement_crotch_categories = "Pants,Other" | split: ","
+  assign measurement_bicep_categories = "Shirt,Other" | split: ","
+  assign measurement_hips_categories = "Pants,Chaps,Other" | split: ","
+-%}
+
 <style>
+  .order-status-banner {
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #856404;
+    text-align: center;
+  }
+
+  .unit-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 8px 12px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  .unit-toggle-label {
+    font-weight: bold;
+    margin-right: 8px;
+  }
+
+  .unit-toggle-buttons {
+    display: flex;
+    gap: 8px;
+  }
+
+  .unit-toggle-button {
+    padding: 6px 16px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+  }
+
+  .unit-toggle-button.active {
+    background-color: #444;
+    color: #fff;
+    border-color: #444;
+  }
+
   .measurement-select {
     font-weight: bold;
     color: black;
@@ -8,45 +111,28 @@
     border-radius: 4px;
     background: white;
   }
+
   .measurements-group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
     gap: 12px;
     margin-bottom: 16px;
   }
+
   .measurements-group label {
     display: block;
     margin-bottom: 4px;
     font-weight: bold;
   }
-</style>
 
-{% assign measurements = 'Neck,Chest,Shoulders,Torso,Stomach,Waist,Butt,Upper Thigh,Lower Thigh,Knee,Calf,Ankle,Inseam,Crotch,Bicep,Hips'
-  | split: ','
-%}
-<div class="measurements-group">
-  {% for meas in measurements %}
-    {% assign handle = meas | handleize %}
-    <div>
-      <label for="{{ handle }}">{{ meas }}</label>
-      <select
-        id="{{ handle }}"
-        name="properties[{{ meas }}]"
-        form="product-form-{{ section.id }}"
-        class="measurement-select"
-        required
-      >
-        <option value="" disabled selected>—</option>
-        {% for i in (1..600) %}
-          {% assign val = i | times: 0.5 %}
-          <option value="{{ val | round:2 }}">{{ val | round: 2 }}</option>
-        {% endfor %}
-      </select>
-    </div>
-  {% endfor %}
-</div>
+  .measurement-field {
+    display: none;
+  }
 
-<style>
+  .measurement-field.active {
+    display: block;
+  }
+
   .options-group {
     display: flex;
     flex-wrap: wrap;
@@ -102,58 +188,179 @@
   }
 </style>
 
+{%- comment -%} Order Status Banner {%- endcomment -%}
+{%- if banner_enabled -%}
+  <div class="order-status-banner">
+    {{ banner_text }}
+  </div>
+{%- endif -%}
+
+{%- comment -%} Category Selection Buttons {%- endcomment -%}
 <div class="options-group" id="optionButtons">
-  {% assign options = "Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: "," %}
-  {% for opt in options %}
+  {%- for category in categories_list -%}
     <button type="button"
             class="option-button"
             data-index="{{ forloop.index0 }}"
-            data-label="{{ opt }}">
-      {{ opt }}
+            data-label="{{ category }}">
+      {{ category }}
     </button>
-  {% endfor %}
+  {%- endfor -%}
 </div>
 
 <input type="hidden" id="selectedOption" name="properties[Selected Option]" form="product-form-{{ section.id }}" />
 
+{%- comment -%} Custom Order Tagging {%- endcomment -%}
+<input type="hidden" name="properties[{{ order_tag_name }}]" value="{{ order_tag_value }}" form="product-form-{{ section.id }}" />
+
+{%- comment -%} Unit Toggle {%- endcomment -%}
+<div class="unit-toggle-container">
+  <span class="unit-toggle-label">Unit:</span>
+  <div class="unit-toggle-buttons">
+    <button type="button" class="unit-toggle-button active" data-unit="in">Inches</button>
+    <button type="button" class="unit-toggle-button" data-unit="cm">Centimeters</button>
+  </div>
+</div>
+
+{%- comment -%} Measurement Configuration for JavaScript {%- endcomment -%}
+<script type="application/json" id="measurement-config">
+{
+  "measurements": {
+    "Neck": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_neck_categories | json }}, "required": true },
+    "Chest": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_chest_categories | json }}, "required": true },
+    "Shoulders": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_shoulders_categories | json }}, "required": true },
+    "Torso": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_torso_categories | json }}, "required": true },
+    "Stomach": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_stomach_categories | json }}, "required": true },
+    "Waist": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_waist_categories | json }}, "required": true },
+    "Butt": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_butt_categories | json }}, "required": true },
+    "Butt Rise": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_butt_rise_categories | json }}, "required": true },
+    "Upper Thigh": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_upper_thigh_categories | json }}, "required": true },
+    "Lower Thigh": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_lower_thigh_categories | json }}, "required": true },
+    "Knee": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_knee_categories | json }}, "required": true },
+    "Calf": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_calf_categories | json }}, "required": true },
+    "Ankle": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_ankle_categories | json }}, "required": true },
+    "Inseam": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_inseam_categories | json }}, "required": true },
+    "Crotch": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_crotch_categories | json }}, "required": true },
+    "Bicep": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_bicep_categories | json }}, "required": true },
+    "Hips": { "min": 0.5, "max": 300, "step_in": 0.5, "step_cm": 0.5, "categories": {{ measurement_hips_categories | json }}, "required": false }
+  },
+  "categories": {
+    "harness_details": {{ harness_categories | json }},
+    "notes_section": {{ notes_categories | json }}
+  }
+}
+</script>
+
+{%- comment -%} Measurement Fields {%- endcomment -%}
+<div class="measurements-group" id="measurementsGroup">
+  {%- assign measurements_data = "Neck,Chest,Shoulders,Torso,Stomach,Waist,Butt,Butt Rise,Upper Thigh,Lower Thigh,Knee,Calf,Ankle,Inseam,Crotch,Bicep,Hips" | split: "," -%}
+  {%- for meas_name in measurements_data -%}
+    {%- assign handle = meas_name | handleize -%}
+    {%- assign min_in = 0.5 -%}
+    {%- assign max_in = 300.0 -%}
+    {%- assign step_in = 0.5 -%}
+    {%- assign step_cm = 0.5 -%}
+    {%- assign min_cm = min_in | times: 2.54 -%}
+    {%- assign max_cm = max_in | times: 2.54 -%}
+
+    <div class="measurement-field"
+         id="measurement-{{ handle }}"
+         data-measurement="{{ meas_name }}"
+         data-min-in="{{ min_in }}"
+         data-max-in="{{ max_in }}"
+         data-step-in="{{ step_in }}"
+         data-step-cm="{{ step_cm }}">
+      <label for="{{ handle }}-in">{{ meas_name }}</label>
+      <select
+        id="{{ handle }}-in"
+        name="properties[{{ meas_name }} (in)]"
+        form="product-form-{{ section.id }}"
+        class="measurement-select measurement-in"
+        data-measurement="{{ meas_name }}"
+      >
+        <option value="" disabled selected>—</option>
+        {%- assign steps = max_in | divided_by: step_in | floor -%}
+        {%- for i in (0..steps) -%}
+          {%- assign val = i | times: step_in | plus: min_in -%}
+          {%- if val <= max_in -%}
+            {%- if step_in == 0.5 -%}
+              {%- assign display_val = val | round: 1 -%}
+            {%- else -%}
+              {%- assign display_val = val | round: 2 -%}
+            {%- endif -%}
+            <option value="{{ val }}">{{ display_val }}</option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+      <select
+        id="{{ handle }}-cm"
+        name="properties[{{ meas_name }} (cm)]"
+        form="product-form-{{ section.id }}"
+        class="measurement-select measurement-cm"
+        data-measurement="{{ meas_name }}"
+        style="display: none;"
+      >
+        <option value="" disabled selected>—</option>
+        {%- assign steps_cm = max_cm | divided_by: step_cm | floor -%}
+        {%- for i in (0..steps_cm) -%}
+          {%- assign val_cm = i | times: step_cm | plus: min_cm -%}
+          {%- if val_cm <= max_cm -%}
+            {%- if step_cm == 0.5 -%}
+              {%- assign display_val_cm = val_cm | round: 1 -%}
+            {%- else -%}
+              {%- assign display_val_cm = val_cm | round: 2 -%}
+            {%- endif -%}
+            <option value="{{ val_cm }}">{{ display_val_cm }}</option>
+          {%- endif -%}
+        {%- endfor -%}
+      </select>
+    </div>
+  {%- endfor -%}
+</div>
+
+{%- comment -%} Harness Details Section {%- endcomment -%}
 <div class="conditional-section" id="harness-details">
   <label>Leather Color</label>
   <select name="properties[Leather Color]" form="product-form-{{ section.id }}">
     <option value="">Select one</option>
-    <option>Black</option><option>White</option><option>Red</option>
-    <option>Blue</option><option>Green</option><option>Yellow</option>
-    <option>Orange</option><option>Purple</option>
+    {%- for color in leather_colors -%}
+      <option>{{ color }}</option>
+    {%- endfor -%}
   </select>
   <input type="text" name="properties[Leather Color - Text]" class="custom-text" placeholder="Enter custom color" form="product-form-{{ section.id }}">
 
   <label>Left Front Plate</label>
   <select name="properties[Left Front Plate]" form="product-form-{{ section.id }}">
     <option value="">Select one</option>
-    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
-    <option>Boot Image</option><option>Biohazard Symbol</option><option>Cigar Man</option>
+    {%- for plate in left_front_plates -%}
+      <option>{{ plate }}</option>
+    {%- endfor -%}
   </select>
   <input type="text" name="properties[Left Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
 
   <label>Right Front Plate</label>
   <select name="properties[Right Front Plate]" form="product-form-{{ section.id }}">
     <option value="">Select one</option>
-    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
-    <option>Boot Image</option><option>Biohazard Symbol</option><option>Cigar Man</option>
+    {%- for plate in right_front_plates -%}
+      <option>{{ plate }}</option>
+    {%- endfor -%}
   </select>
   <input type="text" name="properties[Right Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
 
   <label>Back Plate</label>
   <select name="properties[Back Plate]" form="product-form-{{ section.id }}">
     <option value="">Select one</option>
-    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
-    <option>Wesco Boot</option><option>Watersports</option><option>Happy Puppy</option>
+    {%- for plate in back_plates -%}
+      <option>{{ plate }}</option>
+    {%- endfor -%}
   </select>
   <input type="text" name="properties[Back Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
 
   <label>Long Sliders</label>
   <select name="properties[Long Sliders]" form="product-form-{{ section.id }}">
     <option value="">Select one</option>
-    <option>None</option><option>Brass</option><option>Steel</option>
+    {%- for slider in long_sliders -%}
+      <option>{{ slider }}</option>
+    {%- endfor -%}
   </select>
   <input type="text" name="properties[Long Sliders - Text]" class="custom-text" placeholder="Enter custom sliders" form="product-form-{{ section.id }}">
 
@@ -162,6 +369,7 @@
   </div>
 </div>
 
+{%- comment -%} Notes Section {%- endcomment -%}
 <div class="conditional-section" id="notes-section">
   <label>Notes</label>
   <textarea name="properties[Notes]" placeholder="Enter your notes here" form="product-form-{{ section.id }}"></textarea>
@@ -170,31 +378,390 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const buttons = document.querySelectorAll('.option-button');
+  (function() {
+    'use strict';
+
+    // Load configuration from JSON script tag
+    const configElement = document.getElementById('measurement-config');
+    const config = configElement ? JSON.parse(configElement.textContent) : {};
+    const INCH_TO_CM = 2.54;
+    const CM_TO_INCH = 1 / 2.54;
+
+    // State
+    let currentUnit = 'in';
+    let selectedCategory = null;
+    const measurementValues = new Map();
+
+    // DOM Elements
+    const optionButtons = document.querySelectorAll('.option-button');
     const selectedInput = document.getElementById('selectedOption');
     const harnessSection = document.getElementById('harness-details');
     const notesSection = document.getElementById('notes-section');
-    const harnessOptions = ["Deluxe Harness", "Standard Harness", "Suspender Harness"];
-    const showNotes = ["Dogtag/Pigtag", "Chaps", "Shirt", "Pants", "Suspenders"];
+    const measurementsGroup = document.getElementById('measurementsGroup');
+    const unitToggleButtons = document.querySelectorAll('.unit-toggle-button');
+    const productForm = document.querySelector('#product-form-{{ section.id }}');
+    const addToCartButton = productForm ? productForm.querySelector('button[type="submit"], button[name="add"]') : null;
 
-    buttons.forEach(button => {
-      button.addEventListener('click', function () {
-        buttons.forEach(btn => btn.classList.remove('selected'));
+    // Initialize - reset all fields
+    function initialize() {
+      // Reset category selection
+      optionButtons.forEach(btn => btn.classList.remove('selected'));
+      if (selectedInput) selectedInput.value = '';
+      selectedCategory = null;
+
+      // Hide all sections
+      if (harnessSection) harnessSection.classList.remove('active');
+      if (notesSection) notesSection.classList.remove('active');
+
+      // Hide all measurements
+      document.querySelectorAll('.measurement-field').forEach(field => {
+        field.classList.remove('active');
+        const inSelect = field.querySelector('.measurement-in');
+        const cmSelect = field.querySelector('.measurement-cm');
+        if (inSelect) {
+          inSelect.value = '';
+          inSelect.removeAttribute('required');
+        }
+        if (cmSelect) {
+          cmSelect.value = '';
+          cmSelect.removeAttribute('required');
+        }
+      });
+
+      // Hide custom text fields
+      document.querySelectorAll('.custom-text').forEach(el => {
+        el.style.display = 'none';
+      });
+
+      // Reset unit toggle
+      currentUnit = 'in';
+      unitToggleButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.unit === 'in');
+      });
+      updateMeasurementVisibility();
+
+      // Disable add to cart button
+      if (addToCartButton) {
+        addToCartButton.disabled = true;
+        addToCartButton.setAttribute('aria-disabled', 'true');
+      }
+
+      // Clear measurement values
+      measurementValues.clear();
+    }
+
+    // Update measurement visibility based on unit
+    function updateMeasurementVisibility() {
+      document.querySelectorAll('.measurement-field').forEach(field => {
+        const inSelect = field.querySelector('.measurement-in');
+        const cmSelect = field.querySelector('.measurement-cm');
+        if (inSelect && cmSelect) {
+          if (currentUnit === 'in') {
+            inSelect.style.display = 'block';
+            cmSelect.style.display = 'none';
+          } else {
+            inSelect.style.display = 'none';
+            cmSelect.style.display = 'block';
+          }
+        }
+      });
+    }
+
+    // Convert value between units
+    function convertValue(value, fromUnit, toUnit) {
+      if (fromUnit === toUnit) return value;
+      if (fromUnit === 'in' && toUnit === 'cm') {
+        return value * INCH_TO_CM;
+      } else if (fromUnit === 'cm' && toUnit === 'in') {
+        return value * CM_TO_INCH;
+      }
+      return value;
+    }
+
+    // Get closest step value
+    function getClosestStepValue(value, step) {
+      return Math.round(value / step) * step;
+    }
+
+    // Update measurement when unit changes
+    function updateMeasurementOnUnitChange() {
+      document.querySelectorAll('.measurement-field.active').forEach(field => {
+        const measName = field.dataset.measurement;
+        const inSelect = field.querySelector('.measurement-in');
+        const cmSelect = field.querySelector('.measurement-cm');
+        const stepIn = parseFloat(field.dataset.stepIn);
+        const stepCm = parseFloat(field.dataset.stepCm);
+
+        if (currentUnit === 'in') {
+          // Switching to inches - convert from CM if we have a value
+          if (cmSelect && cmSelect.value) {
+            const cmValue = parseFloat(cmSelect.value);
+            const inValue = convertValue(cmValue, 'cm', 'in');
+            const closestIn = getClosestStepValue(inValue, stepIn);
+            if (inSelect) {
+              inSelect.value = closestIn.toFixed(stepIn < 1 ? 2 : 0);
+              measurementValues.set(measName, { in: closestIn, cm: cmValue });
+            }
+          }
+        } else {
+          // Switching to CM - convert from inches if we have a value
+          if (inSelect && inSelect.value) {
+            const inValue = parseFloat(inSelect.value);
+            const cmValue = convertValue(inValue, 'in', 'cm');
+            const closestCm = getClosestStepValue(cmValue, stepCm);
+            if (cmSelect) {
+              cmSelect.value = closestCm.toFixed(stepCm < 1 ? 2 : 0);
+              measurementValues.set(measName, { in: inValue, cm: closestCm });
+            }
+          }
+        }
+      });
+      updateMeasurementVisibility();
+    }
+
+    // Show/hide measurements based on category
+    function updateMeasurementsForCategory(category) {
+      if (!category || !config.measurements) return;
+
+      document.querySelectorAll('.measurement-field').forEach(field => {
+        const measName = field.dataset.measurement;
+        const measConfig = config.measurements[measName];
+
+        if (measConfig && measConfig.categories && measConfig.categories.includes(category)) {
+          field.classList.add('active');
+          // Set required attribute based on config
+          const inSelect = field.querySelector('.measurement-in');
+          const cmSelect = field.querySelector('.measurement-cm');
+          if (measConfig.required) {
+            if (inSelect) inSelect.setAttribute('required', 'required');
+            if (cmSelect) cmSelect.setAttribute('required', 'required');
+          } else {
+            if (inSelect) inSelect.removeAttribute('required');
+            if (cmSelect) cmSelect.removeAttribute('required');
+          }
+        } else {
+          field.classList.remove('active');
+          // Clear values when hiding
+          const inSelect = field.querySelector('.measurement-in');
+          const cmSelect = field.querySelector('.measurement-cm');
+          if (inSelect) {
+            inSelect.value = '';
+            inSelect.removeAttribute('required');
+          }
+          if (cmSelect) {
+            cmSelect.value = '';
+            cmSelect.removeAttribute('required');
+          }
+          measurementValues.delete(measName);
+        }
+      });
+    }
+
+    // Validate required fields
+    function validateRequiredFields() {
+      if (!selectedCategory || !config.measurements) return false;
+
+      const requiredMeasurements = [];
+      document.querySelectorAll('.measurement-field.active').forEach(field => {
+        const measName = field.dataset.measurement;
+        const measConfig = config.measurements[measName];
+        const isRequired = measConfig && measConfig.required === true;
+
+        if (isRequired) {
+          const activeSelect = currentUnit === 'in'
+            ? field.querySelector('.measurement-in')
+            : field.querySelector('.measurement-cm');
+          if (!activeSelect || !activeSelect.value || activeSelect.value === '') {
+            requiredMeasurements.push(measName);
+          }
+        }
+      });
+
+      return requiredMeasurements.length === 0;
+    }
+
+    // Update add to cart button state
+    function updateAddToCartButton() {
+      if (!addToCartButton) return;
+
+      const isValid = validateRequiredFields();
+      addToCartButton.disabled = !isValid;
+      addToCartButton.setAttribute('aria-disabled', !isValid);
+
+      if (!isValid) {
+        addToCartButton.title = 'Please select a category and fill all required measurements';
+      } else {
+        addToCartButton.removeAttribute('title');
+      }
+    }
+
+    // Sync measurement values between units
+    function syncMeasurementValues(measName, value, sourceUnit) {
+      const targetUnit = sourceUnit === 'in' ? 'cm' : 'in';
+      const convertedValue = convertValue(parseFloat(value), sourceUnit, targetUnit);
+
+      document.querySelectorAll('.measurement-field').forEach(field => {
+        if (field.dataset.measurement === measName) {
+          const step = sourceUnit === 'in'
+            ? parseFloat(field.dataset.stepCm)
+            : parseFloat(field.dataset.stepIn);
+          const closestValue = getClosestStepValue(convertedValue, step);
+          const targetSelect = field.querySelector(`.measurement-${targetUnit}`);
+
+          if (targetSelect) {
+            // Find the closest matching option
+            const options = Array.from(targetSelect.options);
+            let bestMatch = null;
+            let bestDiff = Infinity;
+
+            options.forEach(opt => {
+              if (opt.value && opt.value !== '') {
+                const optValue = parseFloat(opt.value);
+                const diff = Math.abs(optValue - closestValue);
+                if (diff < bestDiff) {
+                  bestDiff = diff;
+                  bestMatch = opt;
+                }
+              }
+            });
+
+            // Set the value to the best matching option
+            if (bestMatch && bestDiff < step * 2) {
+              targetSelect.value = bestMatch.value;
+            } else {
+              // Fallback: set to closest value if no good match found
+              targetSelect.value = closestValue.toFixed(step < 1 ? 2 : 0);
+            }
+
+            measurementValues.set(measName, {
+              in: sourceUnit === 'in' ? parseFloat(value) : parseFloat(targetSelect.value) / INCH_TO_CM,
+              cm: sourceUnit === 'cm' ? parseFloat(value) : parseFloat(targetSelect.value)
+            });
+          }
+        }
+      });
+    }
+
+    // Category selection handlers
+    optionButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        optionButtons.forEach(btn => btn.classList.remove('selected'));
         this.classList.add('selected');
-        selectedInput.value = this.dataset.label;
+        selectedCategory = this.dataset.label;
+        if (selectedInput) selectedInput.value = selectedCategory;
 
-        harnessSection.classList.toggle('active', harnessOptions.includes(this.dataset.label));
-        notesSection.classList.toggle('active', showNotes.includes(this.dataset.label) || this.dataset.label === "Other");
+        // Show/hide sections
+        if (harnessSection && config.categories && config.categories.harness_details) {
+          harnessSection.classList.toggle('active', config.categories.harness_details.includes(selectedCategory));
+        }
+        if (notesSection && config.categories && config.categories.notes_section) {
+          notesSection.classList.toggle('active', (config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'));
+        }
 
-        // hide custom fields when switching product type
+        // Hide custom fields when switching
         document.querySelectorAll('.custom-text').forEach(el => {
           el.style.display = 'none';
         });
+
+        // Update measurements
+        updateMeasurementsForCategory(selectedCategory);
+        updateAddToCartButton();
       });
     });
-  });
 
+    // Unit toggle handlers
+    unitToggleButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        currentUnit = this.dataset.unit;
+        unitToggleButtons.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.unit === currentUnit);
+        });
+        updateMeasurementOnUnitChange();
+        updateAddToCartButton();
+      });
+    });
+
+    // Measurement change handlers
+    document.querySelectorAll('.measurement-select').forEach(select => {
+      select.addEventListener('change', function() {
+        const field = this.closest('.measurement-field');
+        if (!field) return;
+
+        const measName = field.dataset.measurement;
+        const unit = this.classList.contains('measurement-in') ? 'in' : 'cm';
+
+        if (this.value && this.value !== '') {
+          syncMeasurementValues(measName, this.value, unit);
+        }
+
+        updateAddToCartButton();
+      });
+    });
+
+    // Form submission handler - filter properties
+    if (productForm) {
+      productForm.addEventListener('submit', function(event) {
+        if (!validateRequiredFields()) {
+          event.preventDefault();
+          alert('Please select a category and fill all required measurements.');
+          return false;
+        }
+
+        // Ensure both (in) and (cm) values are set for all active measurements
+        document.querySelectorAll('.measurement-field.active').forEach(field => {
+          const measName = field.dataset.measurement;
+          const inSelect = field.querySelector('.measurement-in');
+          const cmSelect = field.querySelector('.measurement-cm');
+
+          // If one has a value but the other doesn't, sync them
+          if (inSelect && inSelect.value && (!cmSelect || !cmSelect.value)) {
+            syncMeasurementValues(measName, inSelect.value, 'in');
+          } else if (cmSelect && cmSelect.value && (!inSelect || !inSelect.value)) {
+            syncMeasurementValues(measName, cmSelect.value, 'cm');
+          }
+        });
+
+        // Remove measurement properties that don't belong to selected category or are empty
+        if (selectedCategory && config.measurements) {
+          const measurementInputs = this.querySelectorAll('select[name^="properties["]');
+
+          measurementInputs.forEach(input => {
+            const name = input.getAttribute('name');
+            if (name && (name.includes('(in)') || name.includes('(cm)'))) {
+              // Extract measurement name
+              const match = name.match(/properties\[(.+?)\s+\(in\)\]|properties\[(.+?)\s+\(cm\)\]/);
+              if (match) {
+                const measName = match[1] || match[2];
+                const measConfig = config.measurements[measName];
+
+                // Remove if not in category or empty
+                const shouldRemove = !measConfig ||
+                                     !measConfig.categories ||
+                                     !measConfig.categories.includes(selectedCategory) ||
+                                     !input.value ||
+                                     input.value === '';
+
+                if (shouldRemove) {
+                  // Remove this input from form
+                  input.removeAttribute('name');
+                  input.setAttribute('data-removed', 'true');
+                }
+              }
+            }
+          });
+        }
+      });
+    }
+
+    // Initialize on load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initialize);
+    } else {
+      initialize();
+    }
+  })();
+
+  // Toggle custom fields function (for harness details)
   function toggleCustomFields() {
     document.querySelectorAll('.custom-text').forEach(el => {
       el.style.display = 'block';
