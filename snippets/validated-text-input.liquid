@@ -1,11 +1,17 @@
-{%- assign form_id = "product-form-" | append: section.id -%}
+{%- comment %}
+  1. Create unique IDs for our form, input, and error elements
+     based on the section ID.
+{%- endcomment %}
+{%- assign form_id = 'product-form-' | append: section.id -%}
+{%- assign input_id = 'custom-engraving-' | append: section.id -%}
+{%- assign error_id = 'engraving-error-' | append: section.id -%}
 
 <div style="margin-bottom:15px;">
-  <label for="custom-engraving">Engraving (5 chars max, A-Z, 0-9):</label>
-  
-  <input 
-    type="text" 
-    id="custom-engraving" 
+  <label for="{{ input_id }}">Engraving (5 chars max, A-Z, 0-9):</label>
+
+  <input
+    type="text"
+    id="{{ input_id }}"
     name="properties[Engraving]"
     maxlength="5"
     pattern="[a-zA-Z0-9]*"
@@ -14,74 +20,58 @@
     form="{{ form_id }}"
   >
 
-  <div id="engraving-error" style="color: #d9534f; display: none; margin-top: 5px; font-size: 0.9em;">
+  <div id="{{ error_id }}" style="color: #d9534f; display: none; margin-top: 5px; font-size: 0.9em;">
     Please use only 5 characters (letters and numbers).
   </div>
 </div>
 
 <script>
-(function() {
-  // --- THIS IS THE UPDATED SCRIPT ---
-  
-  const currentScript = document.currentScript;
-  
-  // 1. Get the <div> that is the direct sibling *before* this <script> tag.
-  const snippetWrapper = currentScript.previousElementSibling;
+  // --- THIS IS THE FIX ---
+  // Wait for the entire HTML document to be loaded and parsed
+  // before we try to find any elements.
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get the unique IDs we created in Liquid
+    const formId = '{{ form_id }}';
+    const inputId = '{{ input_id }}';
+    const errorId = '{{ error_id }}';
 
-  if (!snippetWrapper) {
-    console.warn('Custom validation: Could not find snippet wrapper.');
-    return;
-  }
+    // Now, find the elements by their unique IDs
+    const productForm = document.getElementById(formId);
+    const customInput = document.getElementById(inputId);
+    const errorMsg = document.getElementById(errorId);
 
-  // 2. Find the input and error message *inside* that specific div.
-  const customInput = snippetWrapper.querySelector('#custom-engraving');
-  const errorMsg = snippetWrapper.querySelector('#engraving-error');
-  
-  if (!customInput || !errorMsg) {
-    console.warn('Custom validation: Could not find input or error message.');
-    return;
-  }
-
-  // 3. Get the form ID *from the input's "form" attribute*.
-  const formId = customInput.getAttribute('form');
-  
-  if (!formId) {
-    console.warn('Custom validation: Input is missing "form" attribute.');
-    return;
-  }
-  
-  // 4. Find the product form using that ID.
-  const productForm = document.getElementById(formId);
-
-  if (!productForm) {
-    console.warn('Custom validation: Could not find form with ID:', formId);
-    return;
-  }
-
-  // --- Real-time validation function (no change) ---
-  function validateInput() {
-    if (!customInput.checkValidity()) {
-      errorMsg.style.display = 'block';
-      customInput.style.borderColor = '#d9534f';
-      customInput.style.boxShadow = '0 0 0 1px #d9534f';
-      return false;
-    } else {
-      errorMsg.style.display = 'none';
-      customInput.style.borderColor = '#ccc';
-      customInput.style.boxShadow = 'none';
-      return true;
+    // Check if all elements were found
+    if (!productForm) {
+      console.warn('Custom validation: Could not find form with ID:', formId);
+      return;
     }
-  }
-
-  // --- Run validation on every keystroke (no change) ---
-  customInput.addEventListener('input', validateInput);
-
-  // --- Keep the 'submit' check as a final safeguard (no change) ---
-  productForm.addEventListener('submit', function(event) {
-    if (!validateInput()) {
-      event.preventDefault(); // Stop the 'Add to Cart'
+    if (!customInput || !errorMsg) {
+      console.warn('Custom validation: Could not find input or error message.');
+      return;
     }
+
+    // --- Real-time validation function (no change) ---
+    function validateInput() {
+      if (!customInput.checkValidity()) {
+        errorMsg.style.display = 'block';
+        customInput.style.borderColor = '#d9534f';
+        customInput.style.boxShadow = '0 0 0 1px #d9534f';
+        return false;
+      } else {
+        errorMsg.style.display = 'none';
+        customInput.style.borderColor = '#ccc';
+        customInput.style.boxShadow = 'none';
+        return true;
+      }
+    }
+
+    // --- Add event listeners (no change) ---
+    customInput.addEventListener('input', validateInput);
+
+    productForm.addEventListener('submit', function (event) {
+      if (!validateInput()) {
+        event.preventDefault(); // Stop the 'Add to Cart'
+      }
+    });
   });
-
-})();
 </script>
