@@ -1,99 +1,103 @@
 {%- comment %}
-  1. Create unique IDs for all elements, including the button.
+  1. Create unique IDs for all elements.
 {%- endcomment %}
-{%- assign form_id = 'product-form-' | append: section.id -%}
-{%- assign input_id = 'custom-engraving-' | append: section.id -%}
-{%- assign error_id = 'engraving-error-' | append: section.id -%}
-
-{%- comment %}
-  NEW: Get the dynamic button ID.
-{%- endcomment %}
-{%- assign button_id = 'ProductSubmitButton-' | append: section.id -%}
+{%- assign form_id = "product-form-" | append: section.id -%}
+{%- assign input_id = "custom-engraving-" | append: section.id -%}
+{%- assign error_id = "engraving-error-" | append:section.id -%}
+{%- assign button_id = "ProductSubmitButton-" | append: section.id -%}
 
 <div style="margin-bottom:15px;">
-  <label for="{{ input_id }}">Engraving (5 chars max, A-Z, 0-9):</label>
-
-  <input
-    type="text"
-    id="{{ input_id }}"
+  <label for="{{ input_id }}">Engraving (1-5 chars, A-Z, 0-9):</label>
+  
+  <input 
+    type="text" 
+    id="{{ input_id }}" 
     name="properties[Engraving]"
     maxlength="5"
     pattern="[a-zA-Z0-9]*"
+    
+    {%- comment %}
+      NEW: 'required' attribute ensures the field cannot be empty.
+    {%- endcomment %}
+    required 
+    
     title="Only letters (A-Z) and numbers (0-9) are allowed."
     style="width: 100%; border: 1px solid #ccc; padding: 8px; border-radius: 4px; box-sizing: border-box;"
     form="{{ form_id }}"
   >
 
   <div id="{{ error_id }}" style="color: #d9534f; display: none; margin-top: 5px; font-size: 0.9em;">
-    Please use only 5 characters (letters and numbers).
+    Please use 1-5 characters (letters and numbers only).
   </div>
 </div>
 
 <script>
-  // Wait for the entire HTML document to be loaded and parsed
-  document.addEventListener('DOMContentLoaded', function() {
+// Wait for the entire HTML document to be loaded and parsed
+document.addEventListener('DOMContentLoaded', function() {
+  
+  // Get the unique IDs
+  const formId = "{{ form_id }}";
+  const inputId = "{{ input_id }}";
+  const errorId = "{{ error_id }}";
+  const buttonId = "{{ button_id }}";
+  
+  // Find all the elements
+  const productForm = document.getElementById(formId);
+  const customInput = document.getElementById(inputId);
+  const errorMsg = document.getElementById(errorId);
+  const submitButton = document.getElementById(buttonId);
+  
+  // Check if all elements were found
+  if (!productForm || !customInput || !errorMsg || !submitButton) {
+    console.warn('Custom validation: Could not find all required elements.');
+    return;
+  }
 
-    // Get the unique IDs we created in Liquid
-    const formId = "{{ form_id }}";
-    const inputId = "{{ input_id }}";
-    const errorId = "{{ error_id }}";
-
-    {%- comment %}
-      NEW: Get the button ID from Liquid.
-    {%- endcomment %}
-    const buttonId = "{{ button_id }}";
-
-    // Now, find all the elements by their unique IDs
-    const productForm = document.getElementById(formId);
-    const customInput = document.getElementById(inputId);
-    const errorMsg = document.getElementById(errorId);
-
-    {%- comment %}
-      NEW: Find the submit button.
-    {%- endcomment %}
-    const submitButton = document.getElementById(buttonId);
-
-    // Check if all elements were found
-    if (!productForm || !customInput || !errorMsg || !submitButton) {
-      console.warn('Custom validation: Could not find all required elements (form, input, error, or button).');
-      return;
+  // --- Real-time validation function ---
+  function validateInput() {
+    // checkValidity() will now fail if it's empty OR if the pattern/maxlength is wrong
+    if (!customInput.checkValidity()) {
+      errorMsg.style.display = 'block';
+      customInput.style.borderColor = '#d9534f';
+      customInput.style.boxShadow = '0 0 0 1px #d9534f';
+      
+      submitButton.disabled = true;
+      submitButton.style.opacity = '0.5';
+      
+      return false;
+    } else {
+      errorMsg.style.display = 'none';
+      customInput.style.borderColor = '#ccc';
+      customInput.style.boxShadow = 'none';
+      
+      submitButton.disabled = false;
+      submitButton.style.opacity = '1';
+      
+      return true;
     }
+  }
 
-    // --- NEW: Updated validation function ---
-    function validateInput() {
-      if (!customInput.checkValidity()) {
-        errorMsg.style.display = 'block';
-        customInput.style.borderColor = '#d9534f';
-        customInput.style.boxShadow = '0 0 0 1px #d9534f';
-
-        // NEW: Disable the button
-        submitButton.disabled = true;
-        submitButton.style.opacity = '0.5'; // Visually show it's disabled
-
-        return false;
-      } else {
-        errorMsg.style.display = 'none';
-        customInput.style.borderColor = '#ccc';
-        customInput.style.boxShadow = 'none';
-
-        // NEW: Enable the button
-        submitButton.disabled = false;
-        submitButton.style.opacity = '1';
-
-        return true;
-      }
+  // --- Add event listeners ---
+  customInput.addEventListener('input', validateInput);
+  
+  productForm.addEventListener('submit', function(event) {
+    if (!validateInput()) {
+      event.preventDefault();
     }
-
-    // --- Add event listeners (no change) ---
-    customInput.addEventListener('input', validateInput);
-
-    productForm.addEventListener('submit', function(event) {
-      // This is still a good safeguard in case the user submits
-      // by pressing Enter in the text field.
-      if (!validateInput()) {
-        event.preventDefault(); // Stop the 'Add to Cart'
-      }
-    });
-
   });
+
+  {%- comment %}
+    NEW: Disable the button on page load.
+    The 'required' attribute makes the empty field invalid by default.
+  {%- endcomment %}
+  submitButton.disabled = true;
+  submitButton.style.opacity = '0.5';
+
+  // Optional: If the input ever has a pre-filled (valid) value,
+  // run the check once to enable the button.
+  if (customInput.value.length > 0) {
+    validateInput();
+  }
+
+});
 </script>
