@@ -626,7 +626,7 @@
       // Reset unit of measure
       const unitOfMeasureInput = document.getElementById('unitOfMeasure');
       if (unitOfMeasureInput) {
-        unitOfMeasureInput.value = '';
+        unitOfMeasureInput.value = 'Measured in Inches'; // Default to inches
       }
 
       // Reset category selection
@@ -663,12 +663,6 @@
       unitToggleButtons.forEach(btn => {
         btn.classList.toggle('active', btn.dataset.unit === 'in');
       });
-
-      // Reset unit of measure property
-      const unitOfMeasureInput = document.getElementById('unitOfMeasure');
-      if (unitOfMeasureInput) {
-        unitOfMeasureInput.value = 'Measured in Inches'; // Default to inches
-      }
 
       updateMeasurementVisibility();
 
