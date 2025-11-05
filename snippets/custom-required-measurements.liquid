@@ -621,14 +621,30 @@
       });
       updateMeasurementVisibility();
 
-      // Disable add to cart button
-      if (addToCartButton) {
-        addToCartButton.disabled = true;
-        addToCartButton.setAttribute('aria-disabled', 'true');
-      }
-
       // Clear measurement values
       measurementValues.clear();
+
+      // Auto-select first category
+      if (optionButtons.length > 0) {
+        const firstButton = optionButtons[0];
+        firstButton.classList.add('selected');
+        selectedCategory = firstButton.dataset.label;
+        if (selectedInput) selectedInput.value = selectedCategory;
+
+        // Show/hide sections based on first category
+        if (harnessSection && config.categories && config.categories.harness_details) {
+          harnessSection.classList.toggle('active', config.categories.harness_details.includes(selectedCategory));
+        }
+        if (notesSection && config.categories && config.categories.notes_section) {
+          notesSection.classList.toggle('active', (config.categories.notes_section.includes(selectedCategory) || selectedCategory === 'Other'));
+        }
+
+        // Update measurements for first category
+        updateMeasurementsForCategory(selectedCategory);
+      }
+
+      // Update add to cart button state
+      updateAddToCartButton();
     }
 
     // Update measurement visibility based on unit
@@ -747,22 +763,31 @@
 
     // Validate required fields
     function validateRequiredFields() {
-      if (!selectedCategory || !config.measurements) return false;
+      // Must have a category selected
+      if (!selectedCategory || !config.measurements) {
+        return false;
+      }
 
       const requiredMeasurements = [];
       document.querySelectorAll('.measurement-field.active').forEach(field => {
         const measName = field.dataset.measurement;
         const measConfig = config.measurements[measName];
 
+        if (!measConfig) return;
+
         // Check if this measurement is required for the selected category
-        const categoryInfo = measConfig && measConfig.categories ? measConfig.categories[selectedCategory] : null;
-        const isRequired = categoryInfo && categoryInfo.required === true;
+        const categoryInfo = measConfig.categories ? measConfig.categories[selectedCategory] : null;
+        const isRequired = categoryInfo && categoryInfo.included && categoryInfo.required === true;
 
         if (isRequired) {
           const activeSelect = currentUnit === 'in'
             ? field.querySelector('.measurement-in')
             : field.querySelector('.measurement-cm');
-          if (!activeSelect || !activeSelect.value || activeSelect.value === '') {
+
+          // Check if the select has a value (not empty, not the default placeholder)
+          const hasValue = activeSelect && activeSelect.value && activeSelect.value !== '' && activeSelect.value !== '—';
+
+          if (!hasValue) {
             requiredMeasurements.push(measName);
           }
         }
