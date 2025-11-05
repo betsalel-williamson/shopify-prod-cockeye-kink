@@ -1,0 +1,203 @@
+<style>
+  .measurement-select {
+    font-weight: bold;
+    color: black;
+    width: 6em;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: white;
+  }
+  .measurements-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .measurements-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+</style>
+
+{% assign measurements = 'Neck,Chest,Shoulders,Torso,Stomach,Waist,Butt,Upper Thigh,Lower Thigh,Knee,Calf,Ankle,Inseam,Crotch,Bicep,Hips'
+  | split: ','
+%}
+<div class="measurements-group">
+  {% for meas in measurements %}
+    {% assign handle = meas | handleize %}
+    <div>
+      <label for="{{ handle }}">{{ meas }}</label>
+      <select
+        id="{{ handle }}"
+        name="properties[{{ meas }}]"
+        form="product-form-{{ section.id }}"
+        class="measurement-select"
+        required
+      >
+        <option value="" disabled selected>—</option>
+        {% for i in (1..600) %}
+          {% assign val = i | times: 0.5 %}
+          <option value="{{ val | round:2 }}">{{ val | round: 2 }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+  .options-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .option-button {
+    background-color: #eee;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .option-button.selected {
+    background-color: #444;
+    color: #fff;
+  }
+
+  .conditional-section {
+    display: none;
+    margin-top: 16px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+
+  .conditional-section.active {
+    display: block;
+  }
+
+  .custom-text {
+    margin-top: 8px;
+    display: none;
+  }
+
+  .custom-toggle-button {
+    display: inline-block;
+    margin-top: 12px;
+    background-color: #ccc;
+    padding: 8px 14px;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .custom-toggle-button:hover {
+    background-color: #aaa;
+  }
+</style>
+
+<div class="options-group" id="optionButtons">
+  {% assign options = "Deluxe Harness,Standard Harness,Suspender Harness,Dogtag/Pigtag,Chaps,Shirt,Pants,Suspenders,Other" | split: "," %}
+  {% for opt in options %}
+    <button type="button"
+            class="option-button"
+            data-index="{{ forloop.index0 }}"
+            data-label="{{ opt }}">
+      {{ opt }}
+    </button>
+  {% endfor %}
+</div>
+
+<input type="hidden" id="selectedOption" name="properties[Selected Option]" form="product-form-{{ section.id }}" />
+
+<div class="conditional-section" id="harness-details">
+  <label>Leather Color</label>
+  <select name="properties[Leather Color]" form="product-form-{{ section.id }}">
+    <option value="">Select one</option>
+    <option>Black</option><option>White</option><option>Red</option>
+    <option>Blue</option><option>Green</option><option>Yellow</option>
+    <option>Orange</option><option>Purple</option>
+  </select>
+  <input type="text" name="properties[Leather Color - Text]" class="custom-text" placeholder="Enter custom color" form="product-form-{{ section.id }}">
+
+  <label>Left Front Plate</label>
+  <select name="properties[Left Front Plate]" form="product-form-{{ section.id }}">
+    <option value="">Select one</option>
+    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
+    <option>Boot Image</option><option>Biohazard Symbol</option><option>Cigar Man</option>
+  </select>
+  <input type="text" name="properties[Left Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+
+  <label>Right Front Plate</label>
+  <select name="properties[Right Front Plate]" form="product-form-{{ section.id }}">
+    <option value="">Select one</option>
+    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
+    <option>Boot Image</option><option>Biohazard Symbol</option><option>Cigar Man</option>
+  </select>
+  <input type="text" name="properties[Right Front Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+
+  <label>Back Plate</label>
+  <select name="properties[Back Plate]" form="product-form-{{ section.id }}">
+    <option value="">Select one</option>
+    <option>Bear Paw</option><option>Puppy Paw</option><option>Fist Image</option><option>Pig Image</option>
+    <option>Wesco Boot</option><option>Watersports</option><option>Happy Puppy</option>
+  </select>
+  <input type="text" name="properties[Back Plate - Text]" class="custom-text" placeholder="Enter custom plate" form="product-form-{{ section.id }}">
+
+  <label>Long Sliders</label>
+  <select name="properties[Long Sliders]" form="product-form-{{ section.id }}">
+    <option value="">Select one</option>
+    <option>None</option><option>Brass</option><option>Steel</option>
+  </select>
+  <input type="text" name="properties[Long Sliders - Text]" class="custom-text" placeholder="Enter custom sliders" form="product-form-{{ section.id }}">
+
+  <div>
+    <button type="button" class="custom-toggle-button" onclick="toggleCustomFields()">Don't see a color listed? Click here</button>
+  </div>
+</div>
+
+<div class="conditional-section" id="notes-section">
+  <label>Notes</label>
+  <textarea name="properties[Notes]" placeholder="Enter your notes here" form="product-form-{{ section.id }}"></textarea>
+  <label>Event (Optional)</label>
+  <textarea name="properties[Event (Optional)]" placeholder="Event name or details" form="product-form-{{ section.id }}"></textarea>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.option-button');
+    const selectedInput = document.getElementById('selectedOption');
+    const harnessSection = document.getElementById('harness-details');
+    const notesSection = document.getElementById('notes-section');
+    const harnessOptions = ["Deluxe Harness", "Standard Harness", "Suspender Harness"];
+    const showNotes = ["Dogtag/Pigtag", "Chaps", "Shirt", "Pants", "Suspenders"];
+
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedInput.value = this.dataset.label;
+
+        harnessSection.classList.toggle('active', harnessOptions.includes(this.dataset.label));
+        notesSection.classList.toggle('active', showNotes.includes(this.dataset.label) || this.dataset.label === "Other");
+
+        // hide custom fields when switching product type
+        document.querySelectorAll('.custom-text').forEach(el => {
+          el.style.display = 'none';
+        });
+      });
+    });
+  });
+
+  function toggleCustomFields() {
+    document.querySelectorAll('.custom-text').forEach(el => {
+      el.style.display = 'block';
+    });
+  }
+</script>
