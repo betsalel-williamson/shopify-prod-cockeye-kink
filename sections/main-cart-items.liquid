@@ -112,22 +112,14 @@
                     <a href="{{ item.url }}" class="cart-item__name h4 break">{{ item.product.title | escape }}</a>
 
                     {%- comment %}
-                      This code renders custom line item properties.
+                      MEETS: AC3 (Cart Display)
+                      This block loops through all line item properties for this item
+                      and displays them (e.g., "Engraving: ABCDE").
                     {%- endcomment %}
-
                     {%- if item.properties.size > 0 -%}
                       <div class="cart-item-properties">
                         {%- for property in item.properties -%}
-                          {%- comment %}
-                            This is the fix:
-                            1. Assign the first character of the property name to a variable.
-                          {%- endcomment %}
                           {%- assign first_char = property.first | slice: 0 -%}
-
-                          {%- comment %}
-                            2. Check that the first character is NOT an underscore
-                               AND that the property value is not blank.
-                          {%- endcomment %}
                           {%- if first_char != '_' and property.last != blank -%}
                             <div>
                               <strong>{{ property.first }}:</strong> {{ property.last }}
