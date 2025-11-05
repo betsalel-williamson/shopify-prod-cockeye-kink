@@ -1,14 +1,16 @@
 <div style="margin-bottom:15px;">
   <label for="custom-engraving">Engraving (5 chars max, A-Z, 0-9):</label>
-  
-  <input 
-    type="text" 
-    id="custom-engraving" 
+
+  <input
+    type="text"
+    id="custom-engraving"
     name="properties[Engraving]"
     maxlength="5"
     pattern="[a-zA-Z0-9]*"
     title="Only letters (A-Z) and numbers (0-9) are allowed."
-    style="width: 100%; border: 1px solid #ccc; padding: 8px; border-radius: 4px; box-sizing: border-box;">
+    style="width: 100%; border: 1px solid #ccc; padding: 8px; border-radius: 4px; box-sizing: border-box;"
+    form="{{ form_id }}"
+  >
 
   <div id="engraving-error" style="color: #d9534f; display: none; margin-top: 5px; font-size: 0.9em;">
     Please use only 5 characters (letters and numbers).
@@ -16,48 +18,47 @@
 </div>
 
 <script>
-(function() {
-  // Find the elements for this specific instance of the snippet
-  const currentScript = document.currentScript;
-  const section = currentScript.closest('.shopify-section');
-  
-  if (!section) return;
+  (function () {
+    // Find the elements for this specific instance of the snippet
+    const currentScript = document.currentScript;
+    const section = currentScript.closest('.shopify-section');
 
-  const productForm = section.querySelector('form[action$="/cart/add"]');
-  const customInput = section.querySelector('#custom-engraving');
-  const errorMsg = section.querySelector('#engraving-error');
+    if (!section) return;
 
-  if (!productForm || !customInput || !errorMsg) return;
+    const productForm = section.querySelector('form[action$="/cart/add"]');
+    const customInput = section.querySelector('#custom-engraving');
+    const errorMsg = section.querySelector('#engraving-error');
 
-  // --- NEW: Real-time validation function ---
-  function validateInput() {
-    // checkValidity() uses the "pattern" and "maxlength" attributes
-    if (!customInput.checkValidity()) {
-      // Show error
-      errorMsg.style.display = 'block';
-      // Highlight the field with a red border
-      customInput.style.borderColor = '#d9534f'; // A common red for errors
-      customInput.style.boxShadow = '0 0 0 1px #d9534f'; // Adds a subtle "glow"
-      return false;
-    } else {
-      // Hide error
-      errorMsg.style.display = 'none';
-      // Reset the field's style
-      customInput.style.borderColor = '#ccc';
-      customInput.style.boxShadow = 'none';
-      return true;
+    if (!productForm || !customInput || !errorMsg) return;
+
+    // --- NEW: Real-time validation function ---
+    function validateInput() {
+      // checkValidity() uses the "pattern" and "maxlength" attributes
+      if (!customInput.checkValidity()) {
+        // Show error
+        errorMsg.style.display = 'block';
+        // Highlight the field with a red border
+        customInput.style.borderColor = '#d9534f'; // A common red for errors
+        customInput.style.boxShadow = '0 0 0 1px #d9534f'; // Adds a subtle "glow"
+        return false;
+      } else {
+        // Hide error
+        errorMsg.style.display = 'none';
+        // Reset the field's style
+        customInput.style.borderColor = '#ccc';
+        customInput.style.boxShadow = 'none';
+        return true;
+      }
     }
-  }
 
-  // --- NEW: Run validation on every keystroke ---
-  customInput.addEventListener('input', validateInput);
+    // --- NEW: Run validation on every keystroke ---
+    customInput.addEventListener('input', validateInput);
 
-  // --- Keep the 'submit' check as a final safeguard ---
-  productForm.addEventListener('submit', function(event) {
-    if (!validateInput()) {
-      event.preventDefault(); // Stop the 'Add to Cart'
-    }
-  });
-
-})();
+    // --- Keep the 'submit' check as a final safeguard ---
+    productForm.addEventListener('submit', function (event) {
+      if (!validateInput()) {
+        event.preventDefault(); // Stop the 'Add to Cart'
+      }
+    });
+  })();
 </script>
