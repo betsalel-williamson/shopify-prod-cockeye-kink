@@ -1,6 +1,3 @@
-{%- comment %}
-  This part builds the dynamic form ID. This is correct.
-{%- endcomment %}
 {%- assign form_id = "product-form-" | append: section.id -%}
 
 <div style="margin-bottom:15px;">
@@ -14,10 +11,6 @@
     pattern="[a-zA-Z0-9]*"
     title="Only letters (A-Z) and numbers (0-9) are allowed."
     style="width: 100%; border: 1px solid #ccc; padding: 8px; border-radius: 4px; box-sizing: border-box;"
-    
-    {%- comment %}
-      This 'form' attribute is correct.
-    {%- endcomment %}
     form="{{ form_id }}"
   >
 
