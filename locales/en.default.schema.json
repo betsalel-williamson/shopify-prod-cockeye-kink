@@ -655,16 +655,16 @@
         "name": "Custom Liquid"
       }
     },
-    "custom-order-required-measurements": {
-      "name": "Custom Order Required Measurements",
+    "custom-order-measurements": {
+      "name": "Custom Order Measurements",
       "settings": {
-        "custom_order_required_measurements": {
-          "label": "Custom Order Required Measurements",
-          "info": "Custom Order Required Measurements."
+        "custom_order_measurements": {
+          "label": "Custom Order Measurements",
+          "info": "Custom Order Measurements."
         }
       },
       "presets": {
-        "name": "Custom Liquid"
+        "name": "Custom Order Measurements"
       }
     },
     "featured-blog": {
