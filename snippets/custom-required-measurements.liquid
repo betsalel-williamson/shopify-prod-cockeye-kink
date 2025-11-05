@@ -693,31 +693,74 @@
 
         if (currentUnit === 'in') {
           // Switching to inches - convert from CM if we have a value
-          if (cmSelect && cmSelect.value) {
+          if (cmSelect && cmSelect.value && cmSelect.value !== '' && cmSelect.value !== '—') {
             const cmValue = parseFloat(cmSelect.value);
             const inValue = convertValue(cmValue, 'cm', 'in');
             const closestIn = getClosestStepValue(inValue, stepIn);
+
+            // Find the closest matching option in the inches select
             if (inSelect) {
-              inSelect.value = closestIn.toFixed(stepIn < 1 ? 2 : 0);
-              measurementValues.set(measName, { in: closestIn, cm: cmValue });
+              const options = Array.from(inSelect.options);
+              let bestMatch = null;
+              let bestDiff = Infinity;
+
+              options.forEach(opt => {
+                if (opt.value && opt.value !== '' && opt.value !== '—') {
+                  const optValue = parseFloat(opt.value);
+                  const diff = Math.abs(optValue - closestIn);
+                  if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestMatch = opt;
+                  }
+                }
+              });
+
+              if (bestMatch && bestDiff < stepIn * 2) {
+                inSelect.value = bestMatch.value;
+              } else {
+                inSelect.value = closestIn.toFixed(stepIn < 1 ? 2 : 0);
+              }
+              measurementValues.set(measName, { in: parseFloat(inSelect.value), cm: cmValue });
             }
           }
         } else {
           // Switching to CM - convert from inches if we have a value
-          if (inSelect && inSelect.value) {
+          if (inSelect && inSelect.value && inSelect.value !== '' && inSelect.value !== '—') {
             const inValue = parseFloat(inSelect.value);
             const cmValue = convertValue(inValue, 'in', 'cm');
             const closestCm = getClosestStepValue(cmValue, stepCm);
             // Ensure value is within CM range
             const clampedCm = Math.max(minCm, Math.min(maxCm, closestCm));
+
+            // Find the closest matching option in the cm select
             if (cmSelect) {
-              cmSelect.value = clampedCm.toFixed(stepCm < 1 ? 2 : 0);
-              measurementValues.set(measName, { in: inValue, cm: clampedCm });
+              const options = Array.from(cmSelect.options);
+              let bestMatch = null;
+              let bestDiff = Infinity;
+
+              options.forEach(opt => {
+                if (opt.value && opt.value !== '' && opt.value !== '—') {
+                  const optValue = parseFloat(opt.value);
+                  const diff = Math.abs(optValue - clampedCm);
+                  if (diff < bestDiff) {
+                    bestDiff = diff;
+                    bestMatch = opt;
+                  }
+                }
+              });
+
+              if (bestMatch && bestDiff < stepCm * 2) {
+                cmSelect.value = bestMatch.value;
+              } else {
+                cmSelect.value = clampedCm.toFixed(stepCm < 1 ? 2 : 0);
+              }
+              measurementValues.set(measName, { in: inValue, cm: parseFloat(cmSelect.value) });
             }
           }
         }
       });
       updateMeasurementVisibility();
+      updateAddToCartButton();
     }
 
     // Show/hide measurements based on category
@@ -780,14 +823,15 @@
         const isRequired = categoryInfo && categoryInfo.included && categoryInfo.required === true;
 
         if (isRequired) {
-          const activeSelect = currentUnit === 'in'
-            ? field.querySelector('.measurement-in')
-            : field.querySelector('.measurement-cm');
+          const inSelect = field.querySelector('.measurement-in');
+          const cmSelect = field.querySelector('.measurement-cm');
 
-          // Check if the select has a value (not empty, not the default placeholder)
-          const hasValue = activeSelect && activeSelect.value && activeSelect.value !== '' && activeSelect.value !== '—';
+          // Check if either select has a valid value (both should be synced, but check both to be safe)
+          const inHasValue = inSelect && inSelect.value && inSelect.value !== '' && inSelect.value !== '—';
+          const cmHasValue = cmSelect && cmSelect.value && cmSelect.value !== '' && cmSelect.value !== '—';
 
-          if (!hasValue) {
+          // If neither has a value, it's missing
+          if (!inHasValue && !cmHasValue) {
             requiredMeasurements.push(measName);
           }
         }
