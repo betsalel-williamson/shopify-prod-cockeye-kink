@@ -459,22 +459,37 @@
   (function () {
     'use strict';
 
-    const configElement = document.getElementById('measurement-config-raw');
-    const configData = configElement ? JSON.parse(configElement.textContent) : {};
-    const categoriesData = configData.categories || {};
-    const harnessDetailCategories = configData.harness_details || [];
-    const notesSectionCategories = configData.notes_section || [];
-    const measurementNames = configData.measurements || [];
+    const optionButtons = Array.from(document.querySelectorAll('.option-button'));
+    const measurementFields = Array.from(document.querySelectorAll('.measurement-field'));
+    const measurementNames = measurementFields.map((field) => field.dataset.measurement);
+
+    const categoryConfigs = {};
+    const harnessDetailCategories = [];
+    const notesSectionCategories = [];
+
+    optionButtons.forEach((button) => {
+      const categoryName = button.dataset.label;
+      const requiredList = (button.dataset.required || '').split('|').filter(Boolean);
+      const optionalList = (button.dataset.optional || '').split('|').filter(Boolean);
+      categoryConfigs[categoryName] = {
+        required: requiredList,
+        optional: optionalList,
+      };
+      if (button.dataset.showHarness === 'true') {
+        harnessDetailCategories.push(categoryName);
+      }
+      if (button.dataset.showNotes === 'true') {
+        notesSectionCategories.push(categoryName);
+      }
+    });
 
     const measurements = {};
     measurementNames.forEach((measName) => {
       const categoryInfo = {};
-      Object.entries(categoriesData).forEach(([categoryName, categoryConfig]) => {
-        const requiredList = Array.isArray(categoryConfig.required) ? categoryConfig.required : [];
-        const optionalList = Array.isArray(categoryConfig.optional) ? categoryConfig.optional : [];
-        if (requiredList.includes(measName)) {
+      Object.entries(categoryConfigs).forEach(([categoryName, categoryConfig]) => {
+        if (categoryConfig.required.includes(measName)) {
           categoryInfo[categoryName] = { included: true, required: true };
-        } else if (optionalList.includes(measName)) {
+        } else if (categoryConfig.optional.includes(measName)) {
           categoryInfo[categoryName] = { included: true, required: false };
         }
       });
@@ -498,25 +513,62 @@
     const measurementValues = new Map();
     let isSyncingValues = false;
 
-    const optionButtons = document.querySelectorAll('.option-button');
-    const measurementFields = Array.from(document.querySelectorAll('.measurement-field'));
     const measurementInputs = document.querySelectorAll('.measurement-input');
     const selectedInput = document.getElementById('selectedOption');
     const harnessSection = document.getElementById('harness-details');
     const notesSection = document.getElementById('notes-section');
     const unitToggleButtons = document.querySelectorAll('.unit-toggle-button');
-    const productForm = document.querySelector('#product-form-{{ section.id }}');
+
+    const productFormSelectors = [
+      '#product-form-{{ section.id }}',
+      'form[action*="/cart/add"]',
+      'form[id^="product-form"]',
+    ];
+    let productForm = null;
+    for (const selector of productFormSelectors) {
+      const formCandidate = document.querySelector(selector);
+      if (formCandidate) {
+        productForm = formCandidate;
+        break;
+      }
+    }
+
     const unitOfMeasureInput = document.getElementById('unitOfMeasure');
     const harnessSelects = document.querySelectorAll('#harness-details select');
     const harnessCustomTexts = document.querySelectorAll('#harness-details .custom-text');
 
     const buttonId = 'ProductSubmitButton-{{ section.id }}';
-    let addToCartButton = document.getElementById(buttonId);
-    if (!addToCartButton && productForm) {
-      addToCartButton = productForm.querySelector('button[name="add"]');
-    }
-    if (!addToCartButton) {
-      console.warn('Could not find add to cart button with ID:', buttonId);
+    let addToCartButton = null;
+    let addToCartButtonWarningLogged = false;
+
+    function resolveAddToCartButton() {
+      if (addToCartButton && document.body.contains(addToCartButton)) {
+        return addToCartButton;
+      }
+
+      const buttonSelectors = [
+        `#${buttonId}`,
+        `#product-form-{{ section.id }} button[type="submit"]`,
+        `#product-form-{{ section.id }} button[name="add"]`,
+        'form[action*="/cart/add"] button[type="submit"]',
+        'form[action*="/cart/add"] button[name="add"]',
+        'button[name="add"][type="submit"]',
+      ];
+
+      for (const selector of buttonSelectors) {
+        const candidate = document.querySelector(selector);
+        if (candidate) {
+          addToCartButton = candidate;
+          return addToCartButton;
+        }
+      }
+
+      if (!addToCartButtonWarningLogged) {
+        console.warn('Could not find add to cart button with ID:', buttonId);
+        addToCartButtonWarningLogged = true;
+      }
+
+      return null;
     }
 
     function formatValue(value) {
@@ -659,27 +711,22 @@
     }
 
     function updateAddToCartButton() {
-      if (!addToCartButton) {
-        addToCartButton =
-          document.getElementById(buttonId) || (productForm && productForm.querySelector('button[name="add"]'));
-        if (!addToCartButton) {
-          return;
-        }
-      }
+      const button = resolveAddToCartButton();
+      if (!button) return;
 
       const isValid = validateRequiredFields();
       if (!isValid) {
-        addToCartButton.disabled = true;
-        addToCartButton.style.opacity = '0.5';
-        addToCartButton.setAttribute('disabled', 'disabled');
-        addToCartButton.setAttribute('aria-disabled', 'true');
-        addToCartButton.title = 'Please select a category and fill all required measurements';
+        button.disabled = true;
+        button.style.opacity = '0.5';
+        button.setAttribute('disabled', 'disabled');
+        button.setAttribute('aria-disabled', 'true');
+        button.title = 'Please select a category and fill all required measurements';
       } else {
-        addToCartButton.disabled = false;
-        addToCartButton.style.opacity = '1';
-        addToCartButton.removeAttribute('disabled');
-        addToCartButton.removeAttribute('aria-disabled');
-        addToCartButton.removeAttribute('title');
+        button.disabled = false;
+        button.style.opacity = '1';
+        button.removeAttribute('disabled');
+        button.removeAttribute('aria-disabled');
+        button.removeAttribute('title');
       }
     }
 
@@ -768,9 +815,10 @@
         updateMeasurementsForCategory(selectedCategory);
       }
 
-      if (addToCartButton) {
-        addToCartButton.disabled = true;
-        addToCartButton.style.opacity = '0.5';
+      const button = resolveAddToCartButton();
+      if (button) {
+        button.disabled = true;
+        button.style.opacity = '0.5';
       }
       updateAddToCartButton();
     }
