@@ -886,11 +886,15 @@
 
     measurementInputs.forEach((input) => {
       input.addEventListener('input', function () {
-        const field = this.closest('.measurement-field');
+        updateAddToCartButton();
+      });
+
+      function normalizeMeasurementValue() {
+        const field = input.closest('.measurement-field');
         if (!field) return;
         const measName = field.dataset.measurement;
-        const unit = this.classList.contains('measurement-in') ? 'in' : 'cm';
-        const numericValue = parseValue(this.value);
+        const unit = input.classList.contains('measurement-in') ? 'in' : 'cm';
+        const numericValue = parseValue(input.value);
 
         if (Number.isFinite(numericValue)) {
           syncMeasurementValues(measName, unit, numericValue);
@@ -902,9 +906,11 @@
           }
           measurementValues.delete(measName);
         }
-
         updateAddToCartButton();
-      });
+      }
+
+      input.addEventListener('blur', normalizeMeasurementValue);
+      input.addEventListener('change', normalizeMeasurementValue);
     });
 
     harnessSelects.forEach((select) => {
