@@ -47,14 +47,7 @@
         "text_J6M9gc": {
           "type": "text",
           "settings": {
-            "text": "<strong>All custom orders require the following measurements: Neck, Chest, Shoulders, Stomach, Waist, Butt/Hips, Upper Thigh, Lower Thigh, Knee, Calf(Widest), Ankle, Inseam. See measuring guide. </strong>",
-            "text_style": "body"
-          }
-        },
-        "text_Y9UztG": {
-          "type": "text",
-          "settings": {
-            "text": "<em><strong>Required Measurements: </strong></em>",
+            "text": "<strong>Custom orders can require the following measurements: Neck, Chest, Shoulders, Stomach, Waist, Butt/Hips, Upper Thigh, Lower Thigh, Knee, Calf (widest), Ankle, Inseam. See measuring guide requirements below.</strong>",
             "text_style": "body"
           }
         },
@@ -131,7 +124,6 @@
         "variant_picker",
         "quantity_selector",
         "text_J6M9gc",
-        "text_Y9UztG",
         "custom_liquid_i43zwU",
         "text_Yj8XCR",
         "buy_buttons",
