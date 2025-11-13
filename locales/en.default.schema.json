@@ -397,9 +397,6 @@
         "harness_categories": {
           "label": "Harness categories"
         },
-        "notes_categories": {
-          "label": "Notes categories"
-        },
         "header_options": {
           "content": "Customization options"
         },

@@ -1536,12 +1536,6 @@
         "default": "Deluxe Harness|Standard Harness|Suspender Harness"
       },
       {
-        "type": "text",
-        "id": "custom_measurements_notes_categories",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.notes_categories.label",
-        "default": "Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other"
-      },
-      {
         "type": "header",
         "content": "t:settings_schema.custom_order_measurements_settings.settings.header_options.content"
       },

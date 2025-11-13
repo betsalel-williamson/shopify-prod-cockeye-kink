@@ -31,11 +31,6 @@
   | default: 'Deluxe Harness|Standard Harness|Suspender Harness'
   | split: '|'
 -%}
-{%- assign notes_categories = settings.custom_measurements_notes_categories
-  | default: 'Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other'
-  | split: '|'
--%}
-
 {%- assign leather_colors = settings.custom_measurements_leather_colors
   | default: 'Black|White|Red|Blue|Green|Yellow|Orange|Purple'
   | split: '|'
@@ -216,15 +211,6 @@
       {%- endif -%}
     {%- endfor -%}
 
-    {%- assign notes_match = false -%}
-    {%- for note_category in notes_categories -%}
-      {%- assign note_clean = note_category | strip -%}
-      {%- if note_clean == category_name -%}
-        {%- assign notes_match = true -%}
-        {%- break -%}
-      {%- endif -%}
-    {%- endfor -%}
-
     <button
       type="button"
       class="option-button button button--secondary"
@@ -233,7 +219,7 @@
       data-required="{{ required_string }}"
       data-optional="{{ optional_string }}"
       data-show-harness="{% if harness_match %}true{% else %}false{% endif %}"
-      data-show-notes="{% if notes_match %}true{% else %}false{% endif %}"
+      data-show-notes="true"
     >
       {{ category_name }}
     </button>
@@ -419,7 +405,6 @@
 
     const categoryConfigs = {};
     const harnessDetailCategories = [];
-    const notesSectionCategories = [];
 
     optionButtons.forEach((button) => {
       const categoryName = button.dataset.label;
@@ -431,9 +416,6 @@
       };
       if (button.dataset.showHarness === 'true') {
         harnessDetailCategories.push(categoryName);
-      }
-      if (button.dataset.showNotes === 'true') {
-        notesSectionCategories.push(categoryName);
       }
     });
 
@@ -454,7 +436,7 @@
       measurements,
       categories: {
         harness_details: harnessDetailCategories,
-        notes_section: notesSectionCategories,
+        notes_section: [],
       },
     };
 
@@ -733,11 +715,7 @@
         harnessSection.classList.toggle('active', showHarness);
       }
       if (notesSection) {
-        const showNotes =
-          config.categories && config.categories.notes_section
-            ? config.categories.notes_section.includes(category) || category === 'Other'
-            : category === 'Other';
-        notesSection.classList.toggle('active', showNotes);
+        notesSection.classList.add('active');
       }
 
       document.querySelectorAll('.custom-text').forEach((el) => {
