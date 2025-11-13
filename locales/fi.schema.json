@@ -399,34 +399,7 @@
       "name": "TODO",
       "settings": {
         "header_measurements": {
-          "content": "TODO"
-        },
-        "upper_torso": {
-          "label": "TODO"
-        },
-        "stomach": {
-          "label": "TODO"
-        },
-        "bicep": {
-          "label": "TODO"
-        },
-        "neck": {
-          "label": "TODO"
-        },
-        "waist": {
-          "label": "TODO"
-        },
-        "lower_leg_chain": {
-          "label": "TODO"
-        },
-        "butt": {
-          "label": "TODO"
-        },
-        "inseam_crotch": {
-          "label": "TODO"
-        },
-        "hips": {
-          "label": "TODO"
+          "content": "Categories and measurements"
         },
         "categories_order": {
           "label": "TODO"
@@ -451,6 +424,10 @@
         },
         "long_sliders": {
           "label": "TODO"
+        },
+        "measurement_map": {
+          "label": "Measurement assignments",
+          "info": "Format: Measurement: Category, Category*, ... (use * to mark optional measurements for a category). One measurement per line."
         }
       }
     }

@@ -1,34 +1,31 @@
 {% comment %}
   Custom Required Measurements Snippet
-  Configuration: Define measurement and category groupings using reusable strings.
-  Group strings are composed once and reused across categories to keep the data DRY.
+  Configuration is driven by theme settings: categories are pipe-delimited and
+  measurements are mapped via a text area using the format
+  "Measurement: Category, Category*, ...".
 {% endcomment %}
 
-{%- assign upper_torso = settings.custom_measurements_upper_torso | default: 'Chest|Shoulders|Torso' | split: '|' -%}
-{%- assign stomach_array = settings.custom_measurements_stomach | default: 'Stomach' | split: '|' -%}
-{%- assign bicep_array = settings.custom_measurements_bicep | default: 'Bicep' | split: '|' -%}
-{%- assign neck_array = settings.custom_measurements_neck | default: 'Neck' | split: '|' -%}
-{%- assign waist_array = settings.custom_measurements_waist | default: 'Waist' | split: '|' -%}
-{%- assign lower_leg_chain = settings.custom_measurements_lower_leg_chain | default: 'Upper Thigh|Lower Thigh|Knee|Calf|Ankle' | split: '|' -%}
-{%- assign butt_array = settings.custom_measurements_butt | default: 'Butt|Butt Rise' | split: '|' -%}
-{%- assign inseam_crotch_array = settings.custom_measurements_inseam_crotch | default: 'Inseam|Crotch' | split: '|' -%}
-{%- assign hips_array = settings.custom_measurements_hips | default: 'Hips' | split: '|' -%}
-
-{%- assign measurement_names = neck_array
-  | concat: upper_torso
-  | concat: stomach_array
-  | concat: waist_array
-  | concat: butt_array
-  | concat: lower_leg_chain
-  | concat: inseam_crotch_array
-  | concat: bicep_array
-  | concat: hips_array
-  | uniq
--%}
+{%- assign default_categories_order = 'Deluxe Harness|Standard Harness|Suspender Harness|Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other' -%}
 {%- assign categories_order = settings.custom_measurements_categories_order
-  | default: 'Deluxe Harness|Standard Harness|Suspender Harness|Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other'
+  | default: default_categories_order
   | split: '|'
 -%}
+
+{%- assign default_measurement_map = 'Neck: Deluxe Harness, Standard Harness, Suspender Harness, Dogtag/Pigtag*, Other*\nChest: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Suspenders, Other*\nShoulders: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Suspenders, Other*\nTorso: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Other*\nStomach: Shirt, Other*\nWaist: Deluxe Harness, Standard Harness, Suspender Harness, Chaps, Pants, Suspenders, Other*\nButt: Pants, Other*\nButt Rise: Pants, Other*\nUpper Thigh: Chaps, Pants, Other*\nLower Thigh: Chaps, Pants, Other*\nKnee: Chaps, Pants, Other*\nCalf: Chaps, Pants, Other*\nAnkle: Chaps, Pants, Other*\nInseam: Pants, Other*\nCrotch: Pants, Other*\nBicep: Shirt, Other*\nHips: Chaps*, Pants*, Other*' -%}
+{%- assign measurement_map_source = settings.custom_measurements_map | default: default_measurement_map -%}
+{%- assign measurement_map_lines = measurement_map_source | newline_to_br | split: '<br />' -%}
+
+{%- assign measurement_names = '' | split: '|' -%}
+{%- for measurement_line in measurement_map_lines -%}
+  {%- assign measurement_line = measurement_line | strip -%}
+  {%- if measurement_line == '' -%}{% continue %}{% endif %}
+  {%- assign parts = measurement_line | split: ':' -%}
+  {%- assign measurement_label = parts[0] | strip -%}
+  {%- if measurement_label == '' -%}{% continue %}{% endif %}
+  {%- assign measurement_entry = measurement_label | split: '__split__' -%}
+  {%- assign measurement_names = measurement_names | concat: measurement_entry -%}
+{%- endfor -%}
+{%- assign measurement_names = measurement_names | uniq -%}
 
 {%- assign harness_categories = settings.custom_measurements_harness_categories
   | default: 'Deluxe Harness|Standard Harness|Suspender Harness'
@@ -38,17 +35,6 @@
   | default: 'Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other'
   | split: '|'
 -%}
-
-{%- assign harness_required = neck_array | concat: upper_torso | concat: waist_array -%}
-{%- assign suspenders_required = 'Chest|Shoulders|Waist' | split: '|' -%}
-{%- assign shirt_required = upper_torso | concat: stomach_array | concat: bicep_array -%}
-{%- assign chaps_required = waist_array | concat: lower_leg_chain -%}
-{%- assign pants_required = waist_array | concat: butt_array | concat: lower_leg_chain | concat: inseam_crotch_array -%}
-
-{%- assign empty_measurement_list = measurement_names | slice: 0, 0 -%}
-{%- assign dogtag_optional = neck_array -%}
-{%- assign hips_optional = hips_array -%}
-{%- assign other_optional = measurement_names -%}
 
 {%- assign leather_colors = settings.custom_measurements_leather_colors
   | default: 'Black|White|Red|Blue|Green|Yellow|Orange|Purple'
@@ -223,42 +209,67 @@
 {%- comment -%} Category Selection Buttons {%- endcomment -%}
 <div class="options-group" id="optionButtons">
   {%- for category in categories_order -%}
-    {%- assign required_list = empty_measurement_list -%}
-    {%- assign optional_list = empty_measurement_list -%}
-    {%- if category == 'Deluxe Harness' or category == 'Standard Harness' -%}
-      {%- assign required_list = harness_required -%}
-    {%- elsif category == 'Suspender Harness' -%}
-      {%- assign required_list = harness_required -%}
-    {%- elsif category == 'Dogtag/Pigtag' -%}
-      {%- assign optional_list = dogtag_optional -%}
-    {%- elsif category == 'Chaps' -%}
-      {%- assign required_list = chaps_required -%}
-      {%- assign optional_list = hips_optional -%}
-    {%- elsif category == 'Shirt' -%}
-      {%- assign required_list = shirt_required -%}
-    {%- elsif category == 'Pants' -%}
-      {%- assign required_list = pants_required -%}
-      {%- assign optional_list = hips_optional -%}
-    {%- elsif category == 'Suspenders' -%}
-      {%- assign required_list = suspenders_required -%}
-    {%- elsif category == 'Other' -%}
-      {%- assign optional_list = other_optional -%}
-    {%- endif -%}
+    {%- assign category_name = category | strip -%}
+    {%- if category_name == '' -%}{% continue %}{% endif %}
+    {%- assign required_list = '' | split: '|' -%}
+    {%- assign optional_list = '' | split: '|' -%}
 
-    {%- assign required_string = required_list | join: '|' -%}
-    {%- assign optional_string = optional_list | join: '|' -%}
+    {%- for measurement_line in measurement_map_lines -%}
+      {%- assign measurement_line = measurement_line | strip -%}
+      {%- if measurement_line == '' -%}{% continue %}{% endif %}
+      {%- assign parts = measurement_line | split: ':' -%}
+      {%- assign measurement_label = parts[0] | strip -%}
+      {%- if measurement_label == '' -%}{% continue %}{% endif %}
+      {%- assign categories_part = '' -%}
+      {%- if parts.size > 1 -%}
+        {%- assign categories_part = parts[1] -%}
+      {%- endif -%}
+      {%- assign category_tokens = categories_part | split: ',' -%}
+      {%- for token in category_tokens -%}
+        {%- assign token_clean = token | strip -%}
+        {%- if token_clean == '' -%}{% continue %}{% endif %}
+        {%- assign base_category = token_clean | remove: '*' | strip -%}
+        {%- if base_category == category_name -%}
+          {%- assign measurement_entry = measurement_label | split: '__split__' -%}
+          {%- if base_category != token_clean -%}
+            {%- assign optional_list = optional_list | concat: measurement_entry -%}
+          {%- else -%}
+            {%- assign required_list = required_list | concat: measurement_entry -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endfor -%}
+
+    {%- assign required_string = required_list | uniq | join: '|' -%}
+    {%- assign optional_string = optional_list | uniq | join: '|' -%}
+
+    {%- assign harness_match = false -%}
+    {%- for harness in harness_categories -%}
+      {%- if harness | strip == category_name -%}
+        {%- assign harness_match = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+    {%- assign notes_match = false -%}
+    {%- for note_category in notes_categories -%}
+      {%- if note_category | strip == category_name -%}
+        {%- assign notes_match = true -%}
+        {%- break -%}
+      {%- endif -%}
+    {%- endfor -%}
 
     <button
       type="button"
       class="option-button"
       data-index="{{ forloop.index0 }}"
-      data-label="{{ category }}"
+      data-label="{{ category_name }}"
       data-required="{{ required_string }}"
       data-optional="{{ optional_string }}"
-      data-show-harness="{% if harness_categories contains category %}true{% else %}false{% endif %}"
-      data-show-notes="{% if notes_categories contains category %}true{% else %}false{% endif %}"
+      data-show-harness="{% if harness_match %}true{% else %}false{% endif %}"
+      data-show-notes="{% if notes_match %}true{% else %}false{% endif %}"
     >
-      {{ category }}
+      {{ category_name }}
     </button>
   {%- endfor -%}
 </div>
@@ -294,22 +305,24 @@
 {%- comment -%} Measurement Fields {%- endcomment -%}
 <div class="measurements-group" id="measurementsGroup">
   {%- for meas_name in measurement_names -%}
-    {%- assign handle = meas_name | handleize -%}
+    {%- assign measurement_label = meas_name | strip -%}
+    {%- if measurement_label == '' -%}{% continue %}{% endif %}
+    {%- assign handle = measurement_label | handleize -%}
     <div
       class="measurement-field"
       id="measurement-{{ handle }}"
-      data-measurement="{{ meas_name }}"
+      data-measurement="{{ measurement_label }}"
     >
-      <label for="{{ handle }}-in">{{ meas_name }}</label>
+      <label for="{{ handle }}-in">{{ measurement_label }}</label>
       <input
         type="number"
         inputmode="decimal"
         autocomplete="off"
         id="{{ handle }}-in"
-        name="properties[{{ meas_name }} (in)]"
+        name="properties[{{ measurement_label }} (in)]"
         form="product-form-{{ section.id }}"
         class="measurement-input measurement-in"
-        data-measurement="{{ meas_name }}"
+        data-measurement="{{ measurement_label }}"
         placeholder="0.000"
       >
       <input
@@ -317,10 +330,10 @@
         inputmode="decimal"
         autocomplete="off"
         id="{{ handle }}-cm"
-        name="properties[{{ meas_name }} (cm)]"
+        name="properties[{{ measurement_label }} (cm)]"
         form="product-form-{{ section.id }}"
         class="measurement-input measurement-cm"
-        data-measurement="{{ meas_name }}"
+        data-measurement="{{ measurement_label }}"
         placeholder="0.000"
         style="display: none;"
       >
@@ -514,6 +527,8 @@
     const buttonId = 'ProductSubmitButton-{{ section.id }}';
     let addToCartButton = null;
     let addToCartButtonWarningLogged = false;
+    let addToCartButtonListenerAttached = false;
+    let resetAfterAddToCartPending = false;
 
     function resolveAddToCartButton() {
       if (addToCartButton && document.body.contains(addToCartButton)) {
@@ -533,6 +548,12 @@
         const candidate = document.querySelector(selector);
         if (candidate) {
           addToCartButton = candidate;
+          if (!addToCartButtonListenerAttached) {
+            addToCartButton.addEventListener('click', function () {
+              resetAfterAddToCartPending = true;
+            });
+            addToCartButtonListenerAttached = true;
+          }
           return addToCartButton;
         }
       }
@@ -772,6 +793,7 @@
     function initialize() {
       hasInteractedWithForm = false;
       updateBannerEditingState(false);
+      resetAfterAddToCartPending = false;
 
       if (unitOfMeasureInput) {
         unitOfMeasureInput.value = 'Measured in Inches';
@@ -898,6 +920,7 @@
         if (!validateRequiredFields()) {
           event.preventDefault();
           alert('Please select a category and fill all required measurements.');
+          resetAfterAddToCartPending = false;
           return false;
         }
 
@@ -943,13 +966,9 @@
           });
         }
 
+        resetAfterAddToCartPending = true;
         hasInteractedWithForm = false;
         updateBannerEditingState(false);
-        if (window.CustomOrderBanner && typeof window.CustomOrderBanner.refreshCart === 'function') {
-          const refreshCart = window.CustomOrderBanner.refreshCart;
-          setTimeout(refreshCart, 250);
-          setTimeout(refreshCart, 750);
-        }
       });
     }
 
@@ -972,6 +991,11 @@
     document.addEventListener('cart:updated', function () {
       hasInteractedWithForm = false;
       updateBannerEditingState(false);
+      if (resetAfterAddToCartPending) {
+        initialize();
+        updateAddToCartButton();
+        resetAfterAddToCartPending = false;
+      }
     });
   })();
 

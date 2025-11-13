@@ -385,37 +385,14 @@
       "name": "Custom measurements",
       "settings": {
         "header_measurements": {
-          "content": "Measurement groups"
-        },
-        "upper_torso": {
-          "label": "Upper torso measurements"
-        },
-        "stomach": {
-          "label": "Stomach measurements"
-        },
-        "bicep": {
-          "label": "Bicep measurements"
-        },
-        "neck": {
-          "label": "Neck measurements"
-        },
-        "waist": {
-          "label": "Waist measurements"
-        },
-        "lower_leg_chain": {
-          "label": "Lower leg measurements"
-        },
-        "butt": {
-          "label": "Butt measurements"
-        },
-        "inseam_crotch": {
-          "label": "Inseam and crotch measurements"
-        },
-        "hips": {
-          "label": "Hip measurements"
+          "content": "Categories and measurements"
         },
         "categories_order": {
           "label": "Category order"
+        },
+        "measurement_map": {
+          "label": "Measurement assignments",
+          "info": "Format: Measurement: Category, Category*, ... (use * to mark optional measurements for a category). One measurement per line."
         },
         "harness_categories": {
           "label": "Harness categories"

@@ -1518,63 +1518,16 @@
       },
       {
         "type": "text",
-        "id": "custom_measurements_upper_torso",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.upper_torso.label",
-        "default": "Chest|Shoulders|Torso"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_stomach",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.stomach.label",
-        "default": "Stomach"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_bicep",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.bicep.label",
-        "default": "Bicep"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_neck",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.neck.label",
-        "default": "Neck"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_waist",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.waist.label",
-        "default": "Waist"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_lower_leg_chain",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.lower_leg_chain.label",
-        "default": "Upper Thigh|Lower Thigh|Knee|Calf|Ankle"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_butt",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.butt.label",
-        "default": "Butt|Butt Rise"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_inseam_crotch",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.inseam_crotch.label",
-        "default": "Inseam|Crotch"
-      },
-      {
-        "type": "text",
-        "id": "custom_measurements_hips",
-        "label": "t:settings_schema.custom_order_measurements_settings.settings.hips.label",
-        "default": "Hips"
-      },
-      {
-        "type": "text",
         "id": "custom_measurements_categories_order",
         "label": "t:settings_schema.custom_order_measurements_settings.settings.categories_order.label",
         "default": "Deluxe Harness|Standard Harness|Suspender Harness|Dogtag/Pigtag|Chaps|Shirt|Pants|Suspenders|Other"
+      },
+      {
+        "type": "textarea",
+        "id": "custom_measurements_map",
+        "label": "t:settings_schema.custom_order_measurements_settings.settings.measurement_map.label",
+        "info": "t:settings_schema.custom_order_measurements_settings.settings.measurement_map.info",
+        "default": "Neck: Deluxe Harness, Standard Harness, Suspender Harness, Dogtag/Pigtag*, Other*\nChest: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Suspenders, Other*\nShoulders: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Suspenders, Other*\nTorso: Deluxe Harness, Standard Harness, Suspender Harness, Shirt, Other*\nStomach: Shirt, Other*\nWaist: Deluxe Harness, Standard Harness, Suspender Harness, Chaps, Pants, Suspenders, Other*\nButt: Pants, Other*\nButt Rise: Pants, Other*\nUpper Thigh: Chaps, Pants, Other*\nLower Thigh: Chaps, Pants, Other*\nKnee: Chaps, Pants, Other*\nCalf: Chaps, Pants, Other*\nAnkle: Chaps, Pants, Other*\nInseam: Pants, Other*\nCrotch: Pants, Other*\nBicep: Shirt, Other*\nHips: Chaps*, Pants*, Other*"
       },
       {
         "type": "text",
