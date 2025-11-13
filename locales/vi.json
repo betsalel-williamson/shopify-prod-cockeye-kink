@@ -202,6 +202,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "Không tìm thấy trang",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "Không tìm thấy kết quả cho \"{{ terms }}\". Kiểm tra chính tả hoặc sử dụng một từ hoặc cụm từ khác.",
       "results_with_count": {
@@ -245,10 +249,6 @@
         "error_heading": "Vui lòng điều chỉnh các mục sau:",
         "title": "Biểu mẫu liên hệ"
       }
-    },
-    "404": {
-      "title": "Không tìm thấy trang",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -475,6 +475,12 @@
       "email_label_optional_for_no_js_behavior": "Email người nhận (không bắt buộc)",
       "send_on": "DD-MM-YYYY",
       "send_on_label": "Ngày gửi (tùy chọn)"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }

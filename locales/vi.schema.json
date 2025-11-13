@@ -365,6 +365,94 @@
           "info": "Tác động lên các thẻ và nút."
         }
       }
+    },
+    "custom_order_banner": {
+      "name": "TODO",
+      "settings": {
+        "header_copy": {
+          "content": "TODO"
+        },
+        "editing_text": {
+          "label": "TODO"
+        },
+        "cart_text": {
+          "label": "TODO"
+        },
+        "header_colors": {
+          "content": "TODO"
+        },
+        "background_color": {
+          "label": "TODO"
+        },
+        "text_color": {
+          "label": "TODO"
+        },
+        "shadow_color": {
+          "label": "TODO"
+        },
+        "shadow_opacity": {
+          "label": "TODO"
+        }
+      }
+    },
+    "custom_order_measurements_settings": {
+      "name": "TODO",
+      "settings": {
+        "header_measurements": {
+          "content": "TODO"
+        },
+        "upper_torso": {
+          "label": "TODO"
+        },
+        "stomach": {
+          "label": "TODO"
+        },
+        "bicep": {
+          "label": "TODO"
+        },
+        "neck": {
+          "label": "TODO"
+        },
+        "waist": {
+          "label": "TODO"
+        },
+        "lower_leg_chain": {
+          "label": "TODO"
+        },
+        "butt": {
+          "label": "TODO"
+        },
+        "inseam_crotch": {
+          "label": "TODO"
+        },
+        "hips": {
+          "label": "TODO"
+        },
+        "categories_order": {
+          "label": "TODO"
+        },
+        "harness_categories": {
+          "label": "TODO"
+        },
+        "notes_categories": {
+          "label": "TODO"
+        },
+        "header_options": {
+          "content": "TODO"
+        },
+        "leather_colors": {
+          "label": "TODO"
+        },
+        "front_plate_options": {
+          "label": "TODO"
+        },
+        "back_plate_extra": {
+          "label": "TODO"
+        },
+        "long_sliders": {
+          "label": "TODO"
+        }
+      }
     }
   },
   "sections": {
@@ -2648,6 +2736,9 @@
             "label": "Bên phải"
           },
           "label": "Căn chỉnh nội dung trên thiết bị di động"
+        },
+        "color_scheme": {
+          "info": "TODO"
         }
       },
       "blocks": {
@@ -3283,6 +3374,18 @@
       },
       "presets": {
         "name": "Multirow"
+      }
+    },
+    "custom-order-measurements": {
+      "name": "TODO",
+      "settings": {
+        "custom_order_measurements": {
+          "label": "TODO",
+          "info": "TODO"
+        }
+      },
+      "presets": {
+        "name": "TODO"
       }
     }
   }

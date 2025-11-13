@@ -210,6 +210,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "Stránka nebyla nalezena",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "Nebyly nalezeny žádné výsledky pro {{ terms }}. Zkontrolujte pravopis nebo zadejte jiné slovo či slovní spojení.",
       "title": "Výsledky hledání",
@@ -263,10 +267,6 @@
         "error_heading": "Upravte prosím následující informace:",
         "title": "Kontaktní formulář"
       }
-    },
-    "404": {
-      "title": "Stránka nebyla nalezena",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -495,6 +495,12 @@
       "email_label_optional_for_no_js_behavior": "E-mail příjemce (volitelné)",
       "send_on": "RRRR-MM-DD",
       "send_on_label": "Datum odeslání (volitelné)"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }

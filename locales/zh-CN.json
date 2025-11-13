@@ -202,6 +202,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "找不到页面",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "未找到“{{ terms }}”的结果。请检查拼写或使用其他词或短语。",
       "results_with_count": {
@@ -245,10 +249,6 @@
         "error_heading": "请调整以下内容：",
         "title": "联系表"
       }
-    },
-    "404": {
-      "title": "找不到页面",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -475,6 +475,12 @@
       "email_label_optional_for_no_js_behavior": "收件人邮箱（可选）",
       "send_on": "YYYY-MM-DD",
       "send_on_label": "发送日期（可选）"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }

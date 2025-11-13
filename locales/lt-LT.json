@@ -210,6 +210,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "Puslapis nerastas",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "Nerasta jokių rezultatų pagal užklausą „{{ terms }}“. Patikrinkite rašybą arba vartokite kitą žodį ar frazę.",
       "page": "Puslapis",
@@ -263,10 +267,6 @@
         "error_heading": "Pakoreguokite toliau pateiktą informaciją.",
         "title": "Kontaktinė forma"
       }
-    },
-    "404": {
-      "title": "Puslapis nerastas",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -495,6 +495,12 @@
       "email_label_optional_for_no_js_behavior": "Gavėjo el. pašto adresas (pasirinktinai)",
       "send_on": "MMMM-MM-DD",
       "send_on_label": "Išsiuntimo data (pasirinktinai)"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }

@@ -202,6 +202,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "Siden finnes ikke",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "Fant ingen resultater for «{{ terms }}». Kontroller stavemåten, eller bruk et annet ord.",
       "page": "Side",
@@ -245,10 +249,6 @@
         "error_heading": "Juster følgende:",
         "title": "Kontaktskjema"
       }
-    },
-    "404": {
-      "title": "Siden finnes ikke",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -475,6 +475,12 @@
       "email_label_optional_for_no_js_behavior": "Mottakerens e-post (valgfritt)",
       "send_on": "ÅÅÅÅ-MM-DD",
       "send_on_label": "Send (valgfritt)"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }

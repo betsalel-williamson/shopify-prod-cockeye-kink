@@ -206,6 +206,10 @@
     }
   },
   "templates": {
+    "404": {
+      "title": "Pagina non trovata",
+      "subtext": "404"
+    },
     "search": {
       "no_results": "Nessun risultato per \"{{ terms }}\". Controlla l'ortografia o usa una parola o una frase diversa.",
       "page": "Pagina",
@@ -254,10 +258,6 @@
         "error_heading": "Correggi gli errori seguenti:",
         "title": "Modulo di contatto"
       }
-    },
-    "404": {
-      "title": "Pagina non trovata",
-      "subtext": "404"
     }
   },
   "sections": {
@@ -485,6 +485,12 @@
       "email_label_optional_for_no_js_behavior": "Email destinatario (facoltativa)",
       "send_on": "AAAA-MM-GG",
       "send_on_label": "Spedisci il giorno (opzionale)"
+    }
+  },
+  "custom_order": {
+    "banner": {
+      "editing": "TODO",
+      "cart": "TODO"
     }
   }
 }
