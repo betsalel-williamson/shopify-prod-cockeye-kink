@@ -21,7 +21,10 @@
   style="--custom-order-banner-bg: {{ banner_background_color }}; --custom-order-banner-color: {{ banner_text_color }}; --custom-order-banner-shadow: {{ banner_shadow_rgba }};"
 >
   <div class="custom-order-banner__inner">
-    <span class="custom-order-banner__text" data-banner-text>
+    <span class="custom-order-banner__text custom-order-banner__text--editing" data-banner-editing hidden>
+      {{ banner_editing_text | escape }}
+    </span>
+    <span class="custom-order-banner__text custom-order-banner__text--cart" data-banner-cart hidden>
       {{ banner_cart_text | escape }}
     </span>
   </div>
@@ -43,6 +46,9 @@
   }
 
   .custom-order-banner__inner {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     max-width: var(--page-width, 1200px);
     margin: 0 auto;
     padding: 0.75rem 1.5rem;
@@ -75,7 +81,8 @@
       };
     }
 
-    const textElement = banner.querySelector('[data-banner-text]');
+    const editingElement = banner.querySelector('[data-banner-editing]');
+    const cartElement = banner.querySelector('[data-banner-cart]');
     const editingTextDefault = {{ banner_editing_text | json }};
     const cartTextDefault = {{ banner_cart_text | json }};
     const suppressed =
@@ -96,22 +103,23 @@
         banner.hidden = true;
         return;
       }
-      let shouldShow = false;
-      let nextText = state.cartText;
+      const showEditing = state.forceShow || state.editing;
+      const showCart = state.cartHasCustom;
 
-      if (state.cartHasCustom) {
-        shouldShow = true;
-        nextText = state.cartText || cartTextDefault;
-      } else if (state.forceShow || state.editing) {
-        shouldShow = true;
-        nextText = state.editingText || editingTextDefault;
+      if (editingElement) {
+        const text = state.editingText || editingTextDefault;
+        if (typeof text === 'string') editingElement.textContent = text;
+        editingElement.hidden = !showEditing;
       }
 
-      if (textElement && typeof nextText === 'string' && textElement.textContent !== nextText) {
-        textElement.textContent = nextText;
+      if (cartElement) {
+        const text = state.cartText || cartTextDefault;
+        if (typeof text === 'string') cartElement.textContent = text;
+        cartElement.hidden = !showCart;
       }
 
-      banner.hidden = !shouldShow;
+      banner.hidden = !(showEditing || showCart);
+      banner.classList.toggle('custom-order-banner--stacked', showEditing && showCart);
     }
 
     function setForceShow(value) {
