@@ -414,9 +414,6 @@
         },
         "precision": {
           "label": "Decimal precision"
-        },
-        "inches_to_cm": {
-          "label": "Inches to centimeters conversion"
         }
       }
     },
