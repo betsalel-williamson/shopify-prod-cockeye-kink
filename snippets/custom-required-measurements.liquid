@@ -204,6 +204,16 @@
   .custom-toggle-button:hover {
     background-color: #aaa;
   }
+
+  .measurement-hint {
+    margin-bottom: 12px;
+    font-size: 0.92em;
+    color: #4a4a4a;
+  }
+
+  .measurement-field--optional label {
+    font-weight: normal;
+  }
 </style>
 
 {%- comment -%} Category Selection Buttons {%- endcomment -%}
@@ -305,6 +315,7 @@
 </div>
 
 {%- comment -%} Measurement Fields {%- endcomment -%}
+<p class="measurement-hint">Measurements marked with * are optional for the selected category.</p>
 <div class="measurements-group" id="measurementsGroup">
   {%- for meas_name in measurement_names -%}
     {%- assign measurement_label = meas_name | strip -%}
@@ -314,6 +325,7 @@
       class="measurement-field"
       id="measurement-{{ handle }}"
       data-measurement="{{ measurement_label }}"
+      data-label-base="{{ measurement_label }}"
     >
       <label for="{{ handle }}-in">{{ measurement_label }}</label>
       <input
@@ -663,11 +675,24 @@
         const measName = field.dataset.measurement;
         const measConfig = config.measurements[measName];
         const categoryInfo = measConfig && measConfig.categories ? measConfig.categories[category] : null;
+        const baseLabel = field.dataset.labelBase || measName;
+        const labelElement = field.querySelector('label');
 
         if (categoryInfo && categoryInfo.included) {
           field.classList.add('active');
+          const isOptional = categoryInfo.required === false;
+          field.classList.toggle('measurement-field--optional', isOptional);
+          field.dataset.optional = isOptional ? 'true' : 'false';
+          if (labelElement) {
+            labelElement.textContent = isOptional ? `${baseLabel} *` : baseLabel;
+          }
         } else {
           field.classList.remove('active');
+          field.classList.remove('measurement-field--optional');
+          field.removeAttribute('data-optional');
+          if (labelElement) {
+            labelElement.textContent = baseLabel;
+          }
           clearMeasurementField(field);
         }
       });
