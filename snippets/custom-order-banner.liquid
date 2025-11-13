@@ -132,7 +132,12 @@
     async function refreshCart() {
       if (suppressed) return;
       try {
-        const response = await fetch('/cart.js', { credentials: 'same-origin' });
+        const cartUrl = `/cart.js?timestamp=${Date.now()}`;
+        const response = await fetch(cartUrl, {
+          credentials: 'same-origin',
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' },
+        });
         if (!response.ok) throw new Error(response.statusText);
         const cart = await response.json();
         const hasCustom = (cart.items || []).some((item) => {
