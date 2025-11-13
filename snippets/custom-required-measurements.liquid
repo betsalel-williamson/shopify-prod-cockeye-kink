@@ -946,7 +946,9 @@
         hasInteractedWithForm = false;
         updateBannerEditingState(false);
         if (window.CustomOrderBanner && typeof window.CustomOrderBanner.refreshCart === 'function') {
-          window.CustomOrderBanner.refreshCart();
+          const refreshCart = window.CustomOrderBanner.refreshCart;
+          setTimeout(refreshCart, 250);
+          setTimeout(refreshCart, 750);
         }
       });
     }
