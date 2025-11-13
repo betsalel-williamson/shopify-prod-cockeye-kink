@@ -75,8 +75,7 @@
     gap: var(--spacing-2, 0.5rem);
   }
 
-  .unit-toggle-button.button--secondary.active,
-  .option-button.button--secondary.selected {
+  .unit-toggle-button.button--secondary.active {
     background-color: var(--color-foreground);
     color: var(--color-background);
     border-color: var(--color-foreground);
@@ -107,13 +106,6 @@
 
   .measurement-field.active {
     display: block;
-  }
-
-  .options-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-3, 0.75rem);
-    margin-bottom: var(--spacing-4, 1.5rem);
   }
 
   .conditional-section {
@@ -166,7 +158,8 @@
 </style>
 
 {%- comment -%} Category Selection Buttons {%- endcomment -%}
-<div class="options-group" id="optionButtons">
+<fieldset class="product-form__input product-form__input--pill" id="optionButtons">
+  <legend class="form__label">Custom product category</legend>
   {%- for category in categories_order -%}
     {%- assign category_name = category | strip -%}
     {%- if category_name == '' -%}{% continue %}{% endif %}
@@ -211,20 +204,26 @@
       {%- endif -%}
     {%- endfor -%}
 
-    <button
-      type="button"
-      class="option-button button button--secondary"
+    {%- assign option_id = 'custom-category-' | append: section.id | append: '-' | append: forloop.index0 -%}
+    <input
+      type="radio"
+      id="{{ option_id }}"
+      class="category-option-input"
+      name="custom_category_selection"
+      value="{{ category_name }}"
       data-index="{{ forloop.index0 }}"
       data-label="{{ category_name }}"
       data-required="{{ required_string }}"
       data-optional="{{ optional_string }}"
       data-show-harness="{% if harness_match %}true{% else %}false{% endif %}"
       data-show-notes="true"
+      {% if forloop.first %}checked{% endif %}
     >
+    <label class="category-option-label button button--secondary" for="{{ option_id }}">
       {{ category_name }}
-    </button>
+    </label>
   {%- endfor -%}
-</div>
+</fieldset>
 
 {%- comment -%} Unit of Measure - First property to indicate measurement unit used {%- endcomment -%}
 <input
@@ -399,22 +398,22 @@
   (function () {
     'use strict';
 
-    const optionButtons = Array.from(document.querySelectorAll('.option-button'));
+    const categoryInputs = Array.from(document.querySelectorAll('.category-option-input'));
     const measurementFields = Array.from(document.querySelectorAll('.measurement-field'));
     const measurementNames = measurementFields.map((field) => field.dataset.measurement);
 
     const categoryConfigs = {};
     const harnessDetailCategories = [];
 
-    optionButtons.forEach((button) => {
-      const categoryName = button.dataset.label;
-      const requiredList = (button.dataset.required || '').split('|').filter(Boolean);
-      const optionalList = (button.dataset.optional || '').split('|').filter(Boolean);
+    categoryInputs.forEach((input) => {
+      const categoryName = input.dataset.label;
+      const requiredList = (input.dataset.required || '').split('|').filter(Boolean);
+      const optionalList = (input.dataset.optional || '').split('|').filter(Boolean);
       categoryConfigs[categoryName] = {
         required: requiredList,
         optional: optionalList,
       };
-      if (button.dataset.showHarness === 'true') {
+      if (input.dataset.showHarness === 'true') {
         harnessDetailCategories.push(categoryName);
       }
     });
@@ -758,7 +757,6 @@
         unitOfMeasureInput.value = 'Measured in Inches';
       }
 
-      optionButtons.forEach((btn) => btn.classList.remove('selected'));
       if (selectedInput) selectedInput.value = '';
       selectedCategory = null;
 
@@ -782,10 +780,10 @@
 
       measurementValues.clear();
 
-      if (optionButtons.length > 0) {
-        const firstButton = optionButtons[0];
-        firstButton.classList.add('selected');
-        selectedCategory = firstButton.dataset.label;
+      if (categoryInputs.length > 0) {
+        const firstInput = categoryInputs[0];
+        firstInput.checked = true;
+        selectedCategory = firstInput.dataset.label;
         if (selectedInput) selectedInput.value = selectedCategory;
         updateSectionVisibility(selectedCategory);
         updateMeasurementsForCategory(selectedCategory);
@@ -799,11 +797,10 @@
       updateAddToCartButton();
     }
 
-    optionButtons.forEach((button) => {
-      button.addEventListener('click', function () {
+    categoryInputs.forEach((input) => {
+      input.addEventListener('change', function () {
+        if (!this.checked) return;
         flagFormInteraction();
-        optionButtons.forEach((btn) => btn.classList.remove('selected'));
-        this.classList.add('selected');
         selectedCategory = this.dataset.label;
         if (selectedInput) selectedInput.value = selectedCategory;
 
