@@ -421,7 +421,12 @@
     let isSyncingValues = false;
     let hasInteractedWithForm = false;
 
-    const measurementInputs = document.querySelectorAll('.measurement-input');
+    const measurementInputs = Array.from(document.querySelectorAll('.measurement-input')).map((input) => {
+      if (!input.dataset.originalName) {
+        input.dataset.originalName = input.getAttribute('name');
+      }
+      return input;
+    });
     const harnessSection = document.getElementById('harness-details');
     const notesSection = document.getElementById('notes-section');
     const unitToggleInputs = document.querySelectorAll('#unitToggle input[type="radio"]');
@@ -736,10 +741,21 @@
       measurementFields.forEach((field) => {
         clearMeasurementField(field);
         field.classList.remove('active');
+        field.classList.remove('measurement-field--optional');
+
+        const inputs = field.querySelectorAll('.measurement-input');
+        inputs.forEach((input) => {
+          if (input.dataset.originalName) {
+            input.setAttribute('name', input.dataset.originalName);
+          }
+          input.removeAttribute('data-removed');
+          input.value = '';
+        });
       });
 
       document.querySelectorAll('.custom-text').forEach((el) => {
         el.style.display = 'none';
+        el.value = '';
       });
 
       currentUnit = 'in';
@@ -749,6 +765,21 @@
       updateMeasurementVisibility();
 
       measurementValues.clear();
+
+      if (harnessSection) {
+        harnessSection.querySelectorAll('select').forEach((select) => {
+          select.selectedIndex = 0;
+        });
+        harnessSection.querySelectorAll('.custom-text').forEach((input) => {
+          input.value = '';
+        });
+      }
+
+      if (notesSection) {
+        notesSection.querySelectorAll('textarea').forEach((textarea) => {
+          textarea.value = '';
+        });
+      }
 
       if (categoryInputs.length > 0) {
         const firstInput = categoryInputs[0];
@@ -913,11 +944,12 @@
     document.addEventListener('cart:updated', function () {
       hasInteractedWithForm = false;
       updateBannerEditingState(false);
-      if (resetAfterAddToCartPending) {
-        initialize();
-        updateAddToCartButton();
-        resetAfterAddToCartPending = false;
+      if (!resetAfterAddToCartPending) {
+        return;
       }
+      initialize();
+      updateAddToCartButton();
+      resetAfterAddToCartPending = false;
     });
   })();
 
