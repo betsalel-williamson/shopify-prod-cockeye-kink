@@ -59,10 +59,8 @@ class CartItems extends HTMLElement {
         const html = new DOMParser().parseFromString(responseText, 'text/html');
         const sourceQty = html.querySelector('cart-items');
         this.innerHTML = sourceQty.innerHTML;
-        const items = JSON.parse(
-          html.querySelector('[data-cart-items-json]')?.textContent || '[]'
-        );
-        dispatchCartUpdatedEvent({ section: 'main-cart-items', items });
+        const itemCount = html.querySelector('[data-cart-item-count]');
+        dispatchCartUpdatedEvent({ section: 'main-cart-items', itemCount: itemCount ? Number(itemCount.textContent) : null });
       })
       .catch((e) => {
         console.error(e);
